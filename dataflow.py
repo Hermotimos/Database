@@ -8,7 +8,7 @@ class Title:
 
 
 class Database:
-    def __init__(self, sourcefile="tvseries_data"):
+    def __init__(self, sourcefile):
         self.sourcefile = sourcefile
         assert os.path.isfile(sourcefile), "No source file or invalid sourcefile for database provided!"
         self.openedfile = open(file=sourcefile, mode='r')
