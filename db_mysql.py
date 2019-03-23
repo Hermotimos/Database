@@ -1,0 +1,140 @@
+import mysql.connector
+from random import random
+
+mydb = mysql.connector.connect(host='localhost', user='root', passwd='forPythonuse//')
+mydb.cursor()
+
+# mycursor.execute("CREATE DATABASE Evaluations")
+mycursor = mydb.cursor()
+mycursor.execute("SHOW DATABASES")
+
+for db in mycursor:
+    print(db)
+
+
+mydb = mysql.connector.connect(host='localhost', user='root', passwd='forPythonuse//', database='evaluations')
+mycursor = mydb.cursor()
+
+
+# """CREATE TABLES"""
+#
+# mycursor.execute("CREATE TABLE movies_evaluations "
+#                  "("
+#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+#                  "title VARCHAR(200) NOT NULL,"
+#                  "score TINYINT(2) NOT NULL"
+#                  ")")
+# mycursor.execute("CREATE TABLE tvseries_evaluations "
+#                  "("
+#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+#                  "title VARCHAR(200) NOT NULL,"
+#                  "score TINYINT(2) NOT NULL"
+#                  ")")
+# mycursor.execute("CREATE TABLE pcgames_evaluations "
+#                  "("
+#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+#                  "title VARCHAR(200) NOT NULL,"
+#                  "score TINYINT(2) NOT NULL"
+#                  ")")
+# mycursor.execute("CREATE TABLE boardgames_evaluations "
+#                  "("
+#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+#                  "title VARCHAR(200) NOT NULL,"
+#                  "score TINYINT(2) NOT NULL"
+#                  ")")
+#
+# mycursor.execute("SHOW TABLES")
+# for table in mycursor:
+#     print(table)
+
+
+""" DROP TABLES IF CHANGE OF SCHEMA REQUIRED """
+
+# mycursor.execute("DROP TABLE movies_evaluations")
+# mycursor.execute("DROP TABLE tvseries_evaluations")
+# mycursor.execute("DROP TABLE pcgames_evaluations")
+# mycursor.execute("DROP TABLE boardgames_evaluations")
+
+
+""" POPULATE TABLES WITH RANDOM NUMBER OF EVALUATIONS HAVING RANDOM EVALUATION SCORE"""
+
+
+def generate_evaluations(titles):
+    random_evaluations = []
+    for title in titles:
+        n = 0
+        while n <= round(random() * 10-1 + 1, 0):
+            random_evaluations.append((title, round(random() * (10-1) + 1, 0)))
+            n += 1
+    print(random_evaluations)
+    return random_evaluations
+
+
+movies_titles = [
+                  'Blade Runner',
+                  'Contact',
+                  'Interstellar',
+                  'Truman Show',
+                  'Arrival',
+                  'Solaris',
+                  'Ex Machina',
+                  'Eternal Sunshine of The Spotless Mind',
+                  'Her',
+                  'Moon',
+                  'Dune'
+                ]
+tvseries_titles = [
+                    'The Wire',
+                    'The Shield',
+                    'Battlestar Galactica',
+                    'Twin Peaks',
+                    'True Detective',
+                    'Game of Thrones',
+                    'The Expanse',
+                    'Altered Carbon',
+                    'Deadwood',
+                    'Sons of Anarchy',
+                    'Taboo'
+                    ]
+pcgames_titles = [
+                  'Medieval Total War',
+                  'Shogun Total War',
+                  'Shogun 2 Total War',
+                  'Medieval 2 Total War',
+                  'Rome Total War',
+                  'Diablo',
+                  'Diablo 2',
+                  'Icewind Dale 2',
+                  'Fallout',
+                  'Heroes of Might And Magic III',
+                  'Quake III: Arena',
+                ]
+boardgames_titles = [
+                        'Battlestar Galactica',
+                        'Game of Thrones',
+                        'Carcassonne',
+                        'Dixit',
+                        'Magiczny Miecz',
+                        'The Settlers of Catan'
+                    ]
+
+random_evals_movies = generate_evaluations(movies_titles)
+random_evals_tvseries = generate_evaluations(tvseries_titles)
+random_evals_pcgames = generate_evaluations(pcgames_titles)
+random_evals_boardgames = generate_evaluations(boardgames_titles)
+
+insert_into_movies_evaluations = "INSERT INTO movies_evaluations (title, score)" \
+                   "VALUES (%s, %s)"
+insert_into_tvseries_evaluations = "INSERT INTO tvseries_evaluations (title, score)" \
+                   "VALUES (%s, %s)"
+insert_into_pcgames_evaluations = "INSERT INTO pcgames_evaluations (title, score)" \
+                   "VALUES (%s, %s)"
+insert_into_boardgames_evaluations = "INSERT INTO boardgames_evaluations (title, score)" \
+                   "VALUES (%s, %s)"
+
+mycursor.executemany(insert_into_movies_evaluations, random_evals_movies)
+mycursor.executemany(insert_into_tvseries_evaluations, random_evals_tvseries)
+mycursor.executemany(insert_into_pcgames_evaluations, random_evals_pcgames)
+mycursor.executemany(insert_into_boardgames_evaluations, random_evals_boardgames)
+mydb.commit()
+
