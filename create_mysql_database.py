@@ -2,50 +2,48 @@ import mysql.connector
 from random import random
 
 mydb = mysql.connector.connect(host='localhost', user='root', passwd='forPythonuse//')
-mydb.cursor()
-
-# mycursor.execute("CREATE DATABASE Evaluations")
 mycursor = mydb.cursor()
+
+mycursor.execute("CREATE DATABASE evaluations")
 mycursor.execute("SHOW DATABASES")
 
 for db in mycursor:
     print(db)
 
-
 mydb = mysql.connector.connect(host='localhost', user='root', passwd='forPythonuse//', database='evaluations')
 mycursor = mydb.cursor()
 
 
-# """CREATE TABLES"""
-#
-# mycursor.execute("CREATE TABLE movies_evaluations "
-#                  "("
-#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-#                  "title VARCHAR(200) NOT NULL,"
-#                  "score TINYINT(2) NOT NULL"
-#                  ")")
-# mycursor.execute("CREATE TABLE tvseries_evaluations "
-#                  "("
-#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-#                  "title VARCHAR(200) NOT NULL,"
-#                  "score TINYINT(2) NOT NULL"
-#                  ")")
-# mycursor.execute("CREATE TABLE pcgames_evaluations "
-#                  "("
-#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-#                  "title VARCHAR(200) NOT NULL,"
-#                  "score TINYINT(2) NOT NULL"
-#                  ")")
-# mycursor.execute("CREATE TABLE boardgames_evaluations "
-#                  "("
-#                  "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-#                  "title VARCHAR(200) NOT NULL,"
-#                  "score TINYINT(2) NOT NULL"
-#                  ")")
-#
-# mycursor.execute("SHOW TABLES")
-# for table in mycursor:
-#     print(table)
+"""CREATE TABLES"""
+
+mycursor.execute("CREATE TABLE movies_evaluations "
+                 "("
+                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+                 "title VARCHAR(200) NOT NULL,"
+                 "score TINYINT(2) NOT NULL"
+                 ")")
+mycursor.execute("CREATE TABLE tvseries_evaluations "
+                 "("
+                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+                 "title VARCHAR(200) NOT NULL,"
+                 "score TINYINT(2) NOT NULL"
+                 ")")
+mycursor.execute("CREATE TABLE pcgames_evaluations "
+                 "("
+                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+                 "title VARCHAR(200) NOT NULL,"
+                 "score TINYINT(2) NOT NULL"
+                 ")")
+mycursor.execute("CREATE TABLE boardgames_evaluations "
+                 "("
+                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+                 "title VARCHAR(200) NOT NULL,"
+                 "score TINYINT(2) NOT NULL"
+                 ")")
+
+mycursor.execute("SHOW TABLES")
+for table in mycursor:
+    print(table)
 
 
 """ DROP TABLES IF CHANGE OF SCHEMA REQUIRED """
@@ -66,7 +64,6 @@ def generate_evaluations(titles):
         while n <= round(random() * 10-1 + 1, 0):
             random_evaluations.append((title, round(random() * (10-1) + 1, 0)))
             n += 1
-    print(random_evaluations)
     return random_evaluations
 
 
@@ -137,4 +134,3 @@ mycursor.executemany(insert_into_tvseries_evaluations, random_evals_tvseries)
 mycursor.executemany(insert_into_pcgames_evaluations, random_evals_pcgames)
 mycursor.executemany(insert_into_boardgames_evaluations, random_evals_boardgames)
 mydb.commit()
-
