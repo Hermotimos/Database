@@ -13,21 +13,26 @@ class Database:
         self.mycursor = self.eval_db.cursor()
 
     def __str__(self):
-        def db_tables_union(db_cursor):
+        def get_tables(db_cursor):
             db_cursor.execute("SHOW TABLES")
             tables = set(t[0] for t in db_cursor)
+            return tables
+
+        def get_rows(db_cursor, table):
+            db_cursor.execute("SELECT * FROM {}".format(table))
+            return [row for row in db_cursor]
+
+        def db_tables_union(db_cursor):
+            tables = get_tables(db_cursor)
             for table in tables:
-                print('#' * 22, table, '#' * 22)
-                print('-' * 66)
-                print("| {:4} | {:50} |{:2}|".format('id', 'title', 'score'))
-                print('-' * 66)
-                db_cursor.execute("SELECT * FROM {}".format(table))
-                for row in db_cursor:
+                print('-' * 66, '\n', '#' * 22, table, '#' * 22, '\n', '-' * 66)
+                print("| {:4} | {:50} |{:2}|".format('id', 'title', 'score'), '\n', '-' * 66)
+                rows = get_rows(db_cursor, table)
+                for row in rows:
                     row = ''.join("| {:4} | {:50} | {:2} |".format(str(row[0]), row[1], str(row[2])))
                     print(row)
-                print('-' * 66)
-        str(db_tables_union(self.mycursor))
 
+        str(db_tables_union(self.mycursor))
 
 
     def get_evals_for_title(self, title):
