@@ -13,20 +13,30 @@ class Database:
         self.mycursor = self.eval_db.cursor()
 
     def __str__(self):
-        self.mycursor.execute("SELECT * FROM movies_evaluations")
-        return '\n'.join("{} | {} | {}".format(eval_id, title, score) for eval_id, title, score in self.mycursor)
+        def db_tables_union(db_cursor):
+            db_cursor.execute("SHOW TABLES")
+            tables = set(t[0] for t in db_cursor)
+            for table in tables:
+                print('#' * 22, table, '#' * 22)
+                print('-' * 66)
+                print("| {:4} | {:50} |{:2}|".format('id', 'title', 'score'))
+                print('-' * 66)
+                db_cursor.execute("SELECT * FROM {}".format(table))
+                for row in db_cursor:
+                    row = ''.join("| {:4} | {:50} | {:2} |".format(str(row[0]), row[1], str(row[2])))
+                    print(row)
+                print('-' * 66)
+        str(db_tables_union(self.mycursor))
 
 
 
+    def get_evals_for_title(self, title):
+        evals_for_title = self.mycursor.execute("SELECT title, score FROM ")
 
-    def get_evals(self, title):
-        evals = ''
-        for k, v in self.into_dict().items():
-            if k.name == title:
-                evals += "{}: {}{}".format(k.name, v, '\n')
-        return evals
 
-    def avg_evals(self, title):
+        return evals_for_title
+
+    def avg_evals_for_title(self, title):
         cnt = self.cnt_evals(title)
         s = sum(v for k, v in self.into_dict().items() if k.name == title)
         try:
@@ -48,4 +58,11 @@ class Database:
 
 
 c = Database('evaluations')
-print(c)
+
+def print_all_tables(database):
+    try:
+        print(database)
+    except TypeError:
+        pass
+
+print_all_tables(c)
