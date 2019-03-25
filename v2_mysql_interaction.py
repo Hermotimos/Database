@@ -18,10 +18,10 @@ def choose_db():
 
 def instantiate_db(chosen_db):
     if chosen_db == 1:
-        db = Database("tvseries_data")
+        db = Database("data_tvseries")
         return db
     elif chosen_db == 2:
-        db = Database("movies_data")
+        db = Database("data_movies")
         return db
 
 
