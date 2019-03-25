@@ -57,7 +57,7 @@ def do_action():
 
 
 def print_avg_evals(db):
-    return print(db.avg_evals(input("Enter title: ")))
+    return print(db.avg_evals_for_title(input("Enter title: ")))
 
 
 def print_cnt_evals(db):
@@ -65,7 +65,7 @@ def print_cnt_evals(db):
 
 
 def print_get_evals(db):
-    return print(db.get_evals(input("Enter title: ")))
+    return print(db.get_evals_for_title(input("Enter title: ")))
 
 
 def evaluate(database):
