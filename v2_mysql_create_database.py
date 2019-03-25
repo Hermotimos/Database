@@ -8,7 +8,7 @@ mycursor.execute("CREATE DATABASE evaluations")
 mycursor.execute("SHOW DATABASES")
 
 for db in mycursor:
-    print(db)
+    print(db[0])
 
 mydb = mysql.connector.connect(host='localhost', user='root', passwd='forPythonuse//', database='evaluations')
 mycursor = mydb.cursor()
@@ -43,7 +43,7 @@ mycursor.execute("CREATE TABLE boardgames_evaluations "
 
 mycursor.execute("SHOW TABLES")
 for table in mycursor:
-    print(table)
+    print(table[0])
 
 
 """ DROP TABLES IF CHANGE OF SCHEMA REQUIRED """
@@ -58,11 +58,12 @@ for table in mycursor:
 
 
 def generate_evaluations(titles):
+    """ Returns list of 2-element tuples (title, evaluation) """
     random_evaluations = []
     for title in titles:
         n = 0
-        while n <= round(random() * 10-1 + 1, 0):
-            random_evaluations.append((title, round(random() * (10-1) + 1, 0)))
+        while n <= round(random()*(10-1)+1, 0):
+            random_evaluations.append((title, round(random()*(10-1)+1, 0)))
             n += 1
     return random_evaluations
 
