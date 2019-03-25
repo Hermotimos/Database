@@ -1,20 +1,27 @@
 import mysql.connector
 from random import random
 
-mydb = mysql.connector.connect(host='localhost', user='root', passwd='forPythonuse//')
+password = input('Enter password to connect to database:\n')
+mydb = mysql.connector.connect(host='localhost', user='root', passwd=password)
 mycursor = mydb.cursor()
 
+mycursor.execute("DROP DATABASE IF EXISTS evaluations")
 mycursor.execute("CREATE DATABASE evaluations")
 mycursor.execute("SHOW DATABASES")
 
 for db in mycursor:
     print(db[0])
 
-mydb = mysql.connector.connect(host='localhost', user='root', passwd='forPythonuse//', database='evaluations')
+mydb = mysql.connector.connect(host='localhost', user='root', passwd=password, database='evaluations')
 mycursor = mydb.cursor()
 
 
 """CREATE TABLES"""
+
+mycursor.execute("DROP TABLE IF EXISTS movies_evaluations")
+mycursor.execute("DROP TABLE IF EXISTS tvseries_evaluations")
+mycursor.execute("DROP TABLE IF EXISTS pcgames_evaluations")
+mycursor.execute("DROP TABLE IF EXISTS boardgames_evaluations")
 
 mycursor.execute("CREATE TABLE movies_evaluations "
                  "("
@@ -40,18 +47,9 @@ mycursor.execute("CREATE TABLE boardgames_evaluations "
                  "title VARCHAR(200) NOT NULL,"
                  "score TINYINT(2) NOT NULL"
                  ")")
-
 mycursor.execute("SHOW TABLES")
 for table in mycursor:
     print(table[0])
-
-
-""" DROP TABLES IF CHANGE OF SCHEMA REQUIRED """
-
-# mycursor.execute("DROP TABLE movies_evaluations")
-# mycursor.execute("DROP TABLE tvseries_evaluations")
-# mycursor.execute("DROP TABLE pcgames_evaluations")
-# mycursor.execute("DROP TABLE boardgames_evaluations")
 
 
 """ POPULATE TABLES WITH RANDOM NUMBER OF EVALUATIONS HAVING RANDOM EVALUATION SCORE"""
