@@ -21,23 +21,19 @@ class MySQLDB:
                "password: *******\n" \
                "Tables: {}".format(self.database, self.host, self.user, self.list_tables)
 
+
     def __str__(self):
-        def get_rows(cursor, table):
-            cursor.execute("SELECT * FROM {}".format(table))
-            return [row for row in cursor]
+        printout = ''
+        for table in self.list_tables:
+            printout += '\n{}:'.format(table).upper()
+            self.cursor.execute("SELECT * FROM {}".format(table))
 
-        def db_tables_union(cursor):
-            printout =
-            for table in self.list_tables:
-                printout.append(table)
-                rows = get_rows(cursor, table)
-                for row in rows:
-                    printout.append(row)
-            return printout
+            for row in self.cursor:
+                printout += '\n{}'.format(row)
+        return printout
 
-        lst = db_tables_union(self.cursor)
 
-        return str([row for row in lst])
+
 
 
 d = MySQLDB(host='localhost', user='root', database='evaluations')
