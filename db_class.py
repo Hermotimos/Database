@@ -50,7 +50,7 @@ class MySQLDB:
         self.cursor.execute(query)
         result = self.cursor.fetchall()
         return result
-
+        # todo continue with this
 
 d = MySQLDB(host='localhost', user='root', database='evaluations')
 # print('\nTest .query()', d.query('evaluation_id', 'movies_evaluations'))            # todo NOT YET DONE
