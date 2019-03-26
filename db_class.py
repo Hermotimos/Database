@@ -1,22 +1,34 @@
 import mysql.connector
 
-password = input('Enter password for "evaluations" database:\n')
-mydb = mysql.connector.connect(
-                                            host='localhost',
-                                            user='root',
-                                            passwd=password,
-                                            database='evaluations',
-                                            )
-my_cursor = mydb.cursor()
+
+class MySQLDB:
+    def __init__(self, host='', user='', password=input("Enter password for chosen database:\n"), database=''):
+        self.host = host
+        self.user = user
+        self.password = password
+        self.database = database
+
+        self.connection = mysql.connector.connect(
+                                                    host=host,
+                                                    user=user,
+                                                    passwd=password,
+                                                    database=database,
+                                                    )
+        self.cursor = self.connection.cursor()
+
+    def __repr__(self):
+        self.cursor.execute("SHOW TABLES")
+        return "MySQL Database: {}\n" \
+               "host: {}\n" \
+               "user: {}\n" \
+               "password: *******\n" \
+               "Tables: {}".format(self.database, self.host, self.user, [t[0] for t in self.cursor])
 
 
-# SELECT: formatting result
+d = MySQLDB(host='localhost', user='root', database='evaluations')
 
-my_cursor.execute('SELECT * FROM movies_evaluations')
-result = my_cursor.fetchall()
-print('ID', '\t{:35}'.format('TITLE'), '\tSCORE')
-print('--', '\t{:35}'.format('-----'), '\t-----')
-for row in result:
-    print(row[0], "\t{:35}".format(row[1]), "\t{}".format(row[2]))      # reserving space for element
-
-
+# d.cursor.execute('SHOW DATABASES')
+print(d)
+# for table in d:
+#     print(table)
+# print(repr(d))
