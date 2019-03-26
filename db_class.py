@@ -21,21 +21,27 @@ class MySQLDB:
                "password: *******\n" \
                "Tables: {}".format(self.database, self.host, self.user, self.list_tables)
 
-    def get_table(self, table):
-        printout = '\n\n{}\n'.format(table).upper()
-        printout += '--\t{:40}\t-----'.format('-----')
-        printout += '\nID\t{:40}\tSCORE\n'.format('TITLE')
-        printout += '--\t{:40}\t-----'.format('-----')
-        self.cursor.execute("SELECT * FROM {}".format(table))
-        for row in self.cursor:
-            printout += '\n{:}\t{:40}\t{}'.format(row[0], row[1], row[2])
-        return printout
-
     def __str__(self):
-        printout = ''
+        db_printout = ''
         for table in self.list_tables:
-            printout += self.get_table(table)
-        return printout
+            db_printout += self.get_table(table)
+        return db_printout
+
+    def get_table(self, table):
+        table_printout = '\n\n{}\n'.format(table).upper()
+        table_printout += '--\t{:40}\t-----'.format('-----')
+        table_printout += '\nID\t{:40}\tSCORE\n'.format('TITLE')
+        table_printout += '--\t{:40}\t-----'.format('-----')
+        self.cursor.execute("SELECT * FROM {}".format(table))
+        table_printout += self.get_rows(self.cursor)
+        return table_printout
+
+    def get_rows(self, query_result):
+        rows_printout = ''
+        for row in query_result:
+            rows_printout += '\n{:}\t{:40}\t{}'.format(row[0], row[1], row[2])
+        return rows_printout
+
 
     def query(self, columns='*', table='', where=''):
         query = 'SELECT {} FROM {} '.format(columns, table)
