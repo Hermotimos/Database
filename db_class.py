@@ -21,25 +21,19 @@ class MySQLDB:
                "password: *******\n" \
                "Tables: {}".format(self.database, self.host, self.user, self.list_tables)
 
-
     def __str__(self):
         printout = ''
         for table in self.list_tables:
-            printout += '\n{}:'.format(table).upper()
+            printout += '\n\n{}\n'.format(table).upper()
+            printout += '--\t{:40}\t-----'.format('-----')
+            printout += '\nID\t{:40}\tSCORE\n'.format('TITLE')
+            printout += '--\t{:40}\t-----'.format('-----')
             self.cursor.execute("SELECT * FROM {}".format(table))
-
             for row in self.cursor:
-                printout += '\n{}'.format(row)
+                printout += '\n{:}\t{:40}\t{}'.format(row[0], row[1], row[2])
         return printout
 
 
-
-
-
 d = MySQLDB(host='localhost', user='root', database='evaluations')
-
-# d.cursor.execute('SHOW DATABASES')
+print(repr(d))
 print(d)
-# for table in d:
-#     print(table)
-# print(repr(d))
