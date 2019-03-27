@@ -24,35 +24,37 @@ class MySQLDB:
     def __str__(self):
         db_printout = ''
         for table in self.list_tables:
-            db_printout += self.get_table(table)
+            db_printout += self.construct_table(table)
         return db_printout
 
-    def get_table(self, table):
+    def construct_table(self, table):
         table_printout = '\n\n{}\n'.format(table).upper()
         table_printout += '--\t{:40}\t-----'.format('-----')
         table_printout += '\nID\t{:40}\tSCORE\n'.format('TITLE')
         table_printout += '--\t{:40}\t-----'.format('-----')
-        self.cursor.execute("SELECT * FROM {}".format(table))
-        table_printout += self.get_rows(self.cursor)
+        rows = self.sqlquery(table=table)
+        for row in rows:
+            table_printout += '\n{:}\t{:40}\t{}'.format(row[0], row[1], row[2])
         return table_printout
 
-    def get_rows(self, query_result):
-        rows_printout = ''
-        for row in query_result:
-            rows_printout += '\n{:}\t{:40}\t{}'.format(row[0], row[1], row[2])
-        return rows_printout
-
-
-    def query(self, columns='*', table='', where=''):
+    def sqlquery(self, columns='*', table='', where='', order_by=''):
         query = 'SELECT {} FROM {} '.format(columns, table)
         if where != '':
             query += 'WHERE {} '.format(where)
+        if order_by != '':
+            query += 'ORDER BY {} '.format(order_by)
+        return self.do_sqlquery(query)
+
+    def do_sqlquery(self, query):
         self.cursor.execute(query)
-        result = self.cursor.fetchall()
-        return result
-        # todo continue with this
+        return self.cursor.fetchall()
+
+
 
 d = MySQLDB(host='localhost', user='root', database='evaluations')
-# print('\nTest .query()', d.query('evaluation_id', 'movies_evaluations'))            # todo NOT YET DONE
-# print('\nTest .get_table()', d.get_table('tvseries_evaluations'))
-print('\nTest __str__', d)
+# print('\nTest .sqlquery()', d.sqlquery('evaluation_id', 'movies_evaluations'))            # todo NOT YET DONE
+# print('\nTest .construct_table()', d.construct_table('tvseries_evaluations'))
+# print('\nTest __str__', d)
+
+print(d.do_sqlquery('SELECT * FROM boardgames_evaluations WHERE score > 8'))
+print('\nTest .sqlquery()', d.sqlquery('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
