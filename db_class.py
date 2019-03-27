@@ -62,16 +62,22 @@ class MySQLDB:
 
 
 db = MySQLDB(host='localhost', user='root', database='evaluations')
+
+""" TEST .construct_whole_table() and __str__ """
 # print('\nTest .__construct_whole_table()', db.__construct_whole_table('tvseries_evaluations'))
 # print('\nTest __str__', db)
 
+""" TEST .do_sqlquery() """
 # print(db.__do_query('SELECT * FROM boardgames_evaluations WHERE score > 8'))
-# print('\nTest .sqlquery()', db.sqlquery('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
 
-# print('Testing queries')
+""" TEST .sqlquery() """
+# print('\nTest .sqlquery()', db.sqlquery('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
 # print(db.sqlquery('AVG(score)', 'boardgames_evaluations'))
 # print(db.sqlquery('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
 
-# print('Testing insert_evaluation:')
+""" TEST .insert_evaluation() """
 # db.insert_evaluation('boardgames_evaluations', ('Eurobusiness', 2))
 # print(db.sqlquery(from_='boardgames_evaluations'))
+
+""" TEST cartesian JOIN """
+print(db.sqlquery(from_='movies_evaluations, tvseries_evaluations'))
