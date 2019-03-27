@@ -52,15 +52,26 @@ class MySQLDB:
             query_printout += '\n' + '\t'.join(str(elem) for elem in row)
         return query_printout
 
+    def insert_evaluation(self, insert_into='', values=()):
+        # todo needs calling function to provide values as tuple (title, score)
+        statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
+        self.cursor.execute(statement)
+        self.connection.commit()
+        return None
 
-d = MySQLDB(host='localhost', user='root', database='evaluations')
-# print('\nTest .__construct_whole_table()', d.__construct_whole_table('tvseries_evaluations'))
-# print('\nTest __str__', d)
 
-# print(d.__do_query('SELECT * FROM boardgames_evaluations WHERE score > 8'))
-# print('\nTest .sqlquery()', d.sqlquery('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
 
-print('Testing queries')
-print(d.sqlquery('AVG(score)', 'boardgames_evaluations'))
-print(d.sqlquery('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
-print(d.sqlquery(from_='boardgames_evaluations'))
+db = MySQLDB(host='localhost', user='root', database='evaluations')
+# print('\nTest .__construct_whole_table()', db.__construct_whole_table('tvseries_evaluations'))
+# print('\nTest __str__', db)
+
+# print(db.__do_query('SELECT * FROM boardgames_evaluations WHERE score > 8'))
+# print('\nTest .sqlquery()', db.sqlquery('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
+
+# print('Testing queries')
+# print(db.sqlquery('AVG(score)', 'boardgames_evaluations'))
+# print(db.sqlquery('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
+
+# print('Testing insert_evaluation:')
+# db.insert_evaluation('boardgames_evaluations', ('Eurobusiness', 2))
+# print(db.sqlquery(from_='boardgames_evaluations'))
