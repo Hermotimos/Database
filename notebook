@@ -1,0 +1,4 @@
+1. to manage concurrency in database maybe it'd be better to create connection inside every call to the database, as well as close connection after performing sql statement
+    (this has no practical meaning for this database as I'm the only user, but it may matter in real life todo read!)
+
+2.
