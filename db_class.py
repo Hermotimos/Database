@@ -54,6 +54,7 @@ class MySQLDB:
 
     def insert_evaluation(self, insert_into='', values=()):
         # todo needs calling function to provide values as tuple (title, score)
+        # todo add if else to handle multiple rows inserts with .executemany()
         statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
         self.cursor.execute(statement)
         self.connection.commit()
