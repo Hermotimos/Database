@@ -58,27 +58,27 @@ def do_action():
         print(db)
     else:
         chosen_action = choose_action()
-        if chosen_action == 1:                          # if or elif ??
-            db.select(from_=chosen_table)
+        if chosen_action == 1:
+            print(db.select(from_=chosen_table))
         elif chosen_action == 2:
             pass                    # todo further options (eval over n; titles with top n avg-evals etc)
         elif chosen_action == 3:
-            db.select(select='title, AVG(score)', from_=chosen_table, group_by='title')
+            print(db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, group_by='title'))
         elif chosen_action == 4:
             title = ask_for_title()
-            db.select(select='title, score', from_=chosen_table, where='title = {}'.format(title))
+            print(db.select(select='title, score', from_=chosen_table, where='title = {}'.format(title)))
         elif chosen_action == 5:
             title = ask_for_title()
-            db.select(select='COUNT(title)', from_=chosen_table, where='title = {}'.format(title))
+            print(db.select(select='COUNT(title)', from_=chosen_table, where='title = {}'.format(title)))
         elif chosen_action == 6:
             title = ask_for_title()
-            db.select(select='AVG(title)', from_=chosen_table, where='title = {}'.format(title))
+            print(db.select(select='ROUND(AVG(title), 1)', from_=chosen_table, where='title = {}'.format(title)))
         elif chosen_action == 7:
-            db.select(select='title, MAX(score)', from_=chosen_table, where='score = MAX(score)')
+            print(db.select(select='title, MAX(score)', from_=chosen_table, where='score = MAX(score)'))
         elif chosen_action == 8:
-            db.select(select='title, MIN(score)', from_=chosen_table, where='score = MAX(score)')
+            print(db.select(select='title, MIN(score)', from_=chosen_table, where='score = MAX(score)'))
         elif chosen_action == 9:
-            evaluate(db, chosen_table)                                                                          # todo
+            evaluate(db, chosen_table)
 
 
 def evaluate(database, table):
