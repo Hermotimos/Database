@@ -12,9 +12,9 @@ def choose_table():
                          "4 - boardgames\n"
                          "5 - all of the above\n"))
         if data == 1:
-            table = 'movies_evaluations'
-        elif data == 2:
             table = 'tvseries_evaluations'
+        elif data == 2:
+            table = 'movies_evaluations'
         elif data == 3:
             table = 'pcgames_evaluations'
         elif data == 4:
@@ -39,10 +39,10 @@ def choose_action():
                                   "4 - show all evaluations for a title\n"
                                   "5 - show number of evaluations for a title\n"
                                   "6 - show average evaluation score for a title\n"
-                                  "7 - show highest average evaluation score for a title\n"
-                                  "8 - show lowest average evaluation score for a title"
+                                  "7 - show highest evaluation score for a title\n"
+                                  "8 - show lowest evaluation score for a title\n"
                                   "9 - add new evaluation\n"))
-        options = [1, 2, 3, 4, 5, 6, 7, 8]
+        options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         assert 0 < chosen_action < options[-1] + 1
         return chosen_action
     except Exception:
@@ -66,24 +66,27 @@ def do_action():
             print(db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, group_by='title'))
         elif chosen_action == 4:
             title = ask_for_title()
-            print(db.select(select='title, score', from_=chosen_table, where='title = {}'.format(title)))
+            print(db.select(select='title, score', from_=chosen_table, where='title = \'{}\''.format(title)))
         elif chosen_action == 5:
             title = ask_for_title()
-            print(db.select(select='COUNT(title)', from_=chosen_table, where='title = {}'.format(title)))
+            print(db.select(select='COUNT(title)', from_=chosen_table, where='title = \'{}\''.format(title)))
         elif chosen_action == 6:
             title = ask_for_title()
-            print(db.select(select='ROUND(AVG(title), 1)', from_=chosen_table, where='title = {}'.format(title)))
+            print(db.select(select='title, AVG(score)', from_=chosen_table, where='title = \'{}\''.format(title)))
         elif chosen_action == 7:
-            print(db.select(select='title, MAX(score)', from_=chosen_table, where='score = MAX(score)'))
+            title = ask_for_title()
+            print(db.select(select='title, MAX(score)', from_=chosen_table, where='title = \'{}\''.format(title)))
         elif chosen_action == 8:
-            print(db.select(select='title, MIN(score)', from_=chosen_table, where='score = MAX(score)'))
+            title = ask_for_title()
+            print(db.select(select='title, MIN(score)', from_=chosen_table, where='title = \'{}\''.format(title)))
         elif chosen_action == 9:
             evaluate(db, chosen_table)
+        # todo fix bug by adding new evaluation
 
 
-def evaluate(database, table):
-    new_tit = ask_for_title()
-    new_eval = ask_for_evaluation()
+def evaluate(database, table=''):
+    new_tit = str(ask_for_title())
+    new_eval = int(ask_for_evaluation())
     values = (new_tit, new_eval)
     database.insert_evaluation(insert_into=''.format(table), values=values)
     print("Your evaluation: '{}': {} \nYour evaluation is much appreciated.".format(new_tit, new_eval))
