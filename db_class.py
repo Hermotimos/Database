@@ -31,7 +31,7 @@ class MySQLDB:
         statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
         return self.__do_sqlstatement(statement)
 
-    def select(self, select='*', from_='', where='', order_by=''):
+    def select(self, select='*', from_='', where='', order_by='', group_by=''):
 
         def construct_result(query_result):
             query_printout = ''
@@ -44,7 +44,10 @@ class MySQLDB:
             query += 'WHERE {} '.format(where)
         if order_by:
             query += 'ORDER BY {} '.format(order_by)
+        if group_by:
+            query += 'GROUP BY {}'.format(group_by)
         return construct_result(self.__do_sqlstatement(query))
+        # TODO error handling in final sqldb class (GROUP BY requires syntax in SELECT, research)
 
     def __repr__(self):
         return "MySQL Database: {}\nhost: {}\nuser: {}\npassword: *******\n" \
