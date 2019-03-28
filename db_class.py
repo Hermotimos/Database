@@ -11,8 +11,6 @@ class MySQLDB:
     def __open(self):
         self.cnx = mysql.connector.connect(host=self.host, user=self.user, passwd=self.password, database=self.database)
         self.cursor = self.cnx.cursor()
-        self.cursor.execute("SHOW TABLES")
-        self.list_tables = [t[0] for t in self.cursor]
 
     def __close(self):
         self.cursor.close()
@@ -23,9 +21,9 @@ class MySQLDB:
         self.cursor.execute(statement)
         try:
             result = self.cursor.fetchall()
-        except mysql.connector.errors.InterfaceError:
-            result = False
-        self.cnx.commit()       # todo try? maybe not necessary - with select commit has no effect
+        except mysql.connector.errors.InterfaceError:   # if not select-statement, than .fetchall() throws this error
+            result = None
+        self.cnx.commit()                               # just does nothing by select-statement
         self.__close()
         return result
 
@@ -55,8 +53,12 @@ class MySQLDB:
 
     def __str__(self):
         db_printout = ''
+        self.__open()
+        self.cursor.execute("SHOW TABLES")
+        self.list_tables = [t[0] for t in self.cursor]
         for table in self.list_tables:
             db_printout += self.__construct_whole_table(table)
+        self.__close()
         return db_printout
 
     def __construct_whole_table(self, table):
@@ -71,24 +73,16 @@ class MySQLDB:
 
 
 
-
-
-
-
-
-
-
 db = MySQLDB(host='localhost', user='root', database='evaluations')
 
-""" TEST .construct_whole_table() and __str__ """
-# print('\nTest .__construct_whole_table()', db.__construct_whole_table('tvseries_evaluations'))
-# print('\nTest __str__', db)
+""" TEST __str__ and within it also .construct_whole_table()"""
+# print(db)
 
 """ TEST .do_sqlquery() """
-# print(db.__do_sqlstatement('SELECT * FROM boardgames_evaluations WHERE score > 8'))
+# print(db._MySQLDB__do_sqlstatement('SELECT * FROM boardgames_evaluations WHERE score > 8'))
 
 """ TEST .select() """
-# print('\nTest .select()', db.select('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
+# print(db.select('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
 # print(db.select('AVG(score)', 'boardgames_evaluations'))
 # print(db.select('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
 
