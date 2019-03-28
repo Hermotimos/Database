@@ -20,7 +20,7 @@ def choose_table():
         elif data == 4:
             table = 'boardgames_evaluations'
         elif data == 5:
-            table = 'ALL'                              # todo watch out: how to handle this later...?
+            table = 'ALL'
         else:
             raise Exception
         return table
