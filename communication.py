@@ -1,7 +1,7 @@
 from db_class import MySQLDB
 
 
-def choose_db():
+def choose_table():
     """returns str with table name or 'ALL' for printout of whole db"""
 
     try:
@@ -26,7 +26,7 @@ def choose_db():
         return table
     except Exception:
         print("Wrong value entered. Please choose again.\n")
-        return choose_db()
+        return choose_table()
 
 
 def choose_action():
@@ -51,7 +51,7 @@ def choose_action():
 
 
 def do_action():
-    chosen_db = choose_db()
+    chosen_table = choose_table()
     chosen_action = choose_action()
     db = MySQLDB(host='localhost', user='root', database='evaluations')
 
@@ -60,16 +60,47 @@ def do_action():
     elif chosen_action == 2:
         pass                    # todo further options (eval over n; titles with top n avg-evals etc)
     elif chosen_action == 3:
-        db.select(select='title, AVG(score)', from_=chosen_db, group_by='title')
+        db.select(select='title, AVG(score)', from_=chosen_table, group_by='title')
     elif chosen_action == 4:
-        db.select(select='title, score', from_=chosen_db, where='title = xxxxx')      # todo separate function
+        title = ask_for_title()
+        db.select(select='title, score', from_=chosen_table, where='title = {}'.format(title))
     elif chosen_action == 5:
-        db.select(select='COUNT(title)', from_=chosen_db, where='title = xxxxx')      # todo separate function
+        title = ask_for_title()
+        db.select(select='COUNT(title)', from_=chosen_table, where='title = {}'.format(title))
     elif chosen_action == 6:
-        db.select(select='AVG(title)', from_=chosen_db, where='title = xxxxx')        # todo separate function
+        title = ask_for_title()
+        db.select(select='AVG(title)', from_=chosen_table, where='title = {}'.format(title))
     elif chosen_action == 7:
-        db.select(select='title, MAX(score)', from_=chosen_db, where='score = MAX(score)')
+        db.select(select='title, MAX(score)', from_=chosen_table, where='score = MAX(score)')
     elif chosen_action == 8:
-        db.select(select='title, MIN(score)', from_=chosen_db, where='score = MAX(score)')
+        db.select(select='title, MIN(score)', from_=chosen_table, where='score = MAX(score)')
     elif chosen_action == 9:
-        pass                                                                          # todo separate function
+        evaluate(db, chosen_table)                                                                          # todo
+
+
+def evaluate(database, table):
+    new_tit = ask_for_title()
+    new_eval = ask_for_evaluation()
+    values = (new_tit, new_eval)
+    database.insert_evaluation(insert_into=''.format(table), values=values)
+    print("Your evaluation: '{}': {} \nYour evaluation is much appreciated.".format(new_tit, new_eval))
+
+
+def ask_for_title():
+    title = input("Enter title: ")
+    try:
+        assert len(title) > 0
+        return title
+    except AssertionError:
+        print("You have not given any title. Try again :)\n")
+        return ask_for_title()
+
+
+def ask_for_evaluation():
+    new_evaluation = input("Enter evaluation 1-10: ")
+    try:
+        assert 0 < int(new_evaluation) < 11
+        return new_evaluation
+    except Exception:
+        print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(new_evaluation))
+        return ask_for_evaluation()
