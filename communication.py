@@ -34,14 +34,14 @@ def choose_action():
     try:
         chosen_action = int(input("What would you like to do?\n"
                                   "1 - show all evaluations\n"
-                                  "2 - show title with best evaluations\n"
-                                  "3 - show all titles with average evaluation score\n"      # further options
+                                  "2 - show titles with best average evaluation scores\n"
+                                  "3 - show all titles with their average evaluation score\n"      # further options
                                   "4 - show all evaluations for a title\n"
                                   "5 - show number of evaluations for a title\n"
-                                  "6 - show average evaluation for a title\n"
-                                  "5 - show best evaluation for a title\n"
-                                  "7 - show worst evaluation for a title"
-                                  "8 - add new evaluation\n"))
+                                  "6 - show average evaluation score for a title\n"
+                                  "7 - show highest average evaluation score for a title\n"
+                                  "8 - show lowest average evaluation score for a title"
+                                  "9 - add new evaluation\n"))
         options = [1, 2, 3, 4, 5, 6, 7, 8]
         assert 0 < chosen_action < options[-1] + 1
         return chosen_action
@@ -53,20 +53,23 @@ def choose_action():
 def do_action():
     chosen_db = choose_db()
     chosen_action = choose_action()
+    db = MySQLDB(host='localhost', user='root', database='evaluations')
 
     if chosen_action == 1:
-
+        print(db)
     elif chosen_action == 2:
-
+        pass                    # todo further options (eval over n; titles with top n avg-evals etc)
     elif chosen_action == 3:
-
+        db.select(select='title, AVG(score)', from_=chosen_db, group_by='title')
     elif chosen_action == 4:
-
+        db.select(select='title, score', from_=chosen_db, where='title = xxxxx')      # todo separate function
     elif chosen_action == 5:
-
+        db.select(select='COUNT(title)', from_=chosen_db, where='title = xxxxx')      # todo separate function
     elif chosen_action == 6:
-
+        db.select(select='AVG(title)', from_=chosen_db, where='title = xxxxx')        # todo separate function
     elif chosen_action == 7:
-
+        db.select(select='title, MAX(score)', from_=chosen_db, where='score = MAX(score)')
     elif chosen_action == 8:
-
+        db.select(select='title, MIN(score)', from_=chosen_db, where='score = MAX(score)')
+    elif chosen_action == 9:
+        pass                                                                          # todo separate function
