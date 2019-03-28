@@ -28,24 +28,23 @@ class MySQLDB:
         return result
 
     def insert_evaluation(self, insert_into='', values=()):
-        # todo needs calling function to provide values as tuple (title, score)
-        # todo add if else to handle multiple rows inserts with .executemany()
         statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
         return self.__do_sqlstatement(statement)
 
     def select(self, select='*', from_='', where='', order_by=''):
+
+        def construct_result(query_result):
+            query_printout = ''
+            for row in query_result:
+                query_printout += '\n' + '\t'.join(str(elem) for elem in row)
+            return query_printout
+
         query = 'SELECT {} FROM {} '.format(select, from_)
         if where:
             query += 'WHERE {} '.format(where)
         if order_by:
             query += 'ORDER BY {} '.format(order_by)
-        return self.__construct_result(self.__do_sqlstatement(query))
-
-    def __construct_result(self, query_result):
-        query_printout = ''
-        for row in query_result:
-            query_printout += '\n' + '\t'.join(str(elem) for elem in row)
-        return query_printout
+        return construct_result(self.__do_sqlstatement(query))
 
     def __repr__(self):
         return "MySQL Database: {}\nhost: {}\nuser: {}\npassword: *******\n" \
@@ -72,8 +71,8 @@ class MySQLDB:
         return table_printout
 
 
-
 db = MySQLDB(host='localhost', user='root', database='evaluations')
+
 
 """ TEST __str__ and within it also .construct_whole_table()"""
 # print(db)
@@ -87,8 +86,8 @@ db = MySQLDB(host='localhost', user='root', database='evaluations')
 # print(db.select('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
 
 """ TEST .insert_evaluation() """
-db.insert_evaluation('boardgames_evaluations', ('Eurobusiness', 3))
-print(db.select(from_='boardgames_evaluations', where='score > 2'))
+# db.insert_evaluation('boardgames_evaluations', ('Eurobusiness', 3))
+# print(db.select(from_='boardgames_evaluations', where='score > 2'))
 
 """ TEST cartesian JOIN """
 # print(db.select(from_='movies_evaluations, tvseries_evaluations'))
