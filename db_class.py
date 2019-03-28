@@ -8,11 +8,46 @@ class MySQLDB:
         self.password = password
         self.database = database
 
-        self.connection = mysql.connector.connect(host=host, user=user, passwd=password, database=database)
-        self.cursor = self.connection.cursor()
-
+    def __open(self):
+        self.cnx = mysql.connector.connect(host=self.host, user=self.user, passwd=self.password, database=self.database)
+        self.cursor = self.cnx.cursor()
         self.cursor.execute("SHOW TABLES")
         self.list_tables = [t[0] for t in self.cursor]
+
+    def __close(self):
+        self.cursor.close()
+        self.cnx.close()
+
+    def __do_sqlstatement(self, statement):
+        self.__open()
+        self.cursor.execute(statement)
+        try:
+            result = self.cursor.fetchall()
+        except mysql.connector.errors.InterfaceError:
+            result = False
+        self.cnx.commit()       # todo try? maybe not necessary - with select commit has no effect
+        self.__close()
+        return result
+
+    def insert_evaluation(self, insert_into='', values=()):
+        # todo needs calling function to provide values as tuple (title, score)
+        # todo add if else to handle multiple rows inserts with .executemany()
+        statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
+        return self.__do_sqlstatement(statement)
+
+    def select(self, select='*', from_='', where='', order_by=''):
+        query = 'SELECT {} FROM {} '.format(select, from_)
+        if where:
+            query += 'WHERE {} '.format(where)
+        if order_by:
+            query += 'ORDER BY {} '.format(order_by)
+        return self.__construct_result(self.__do_sqlstatement(query))
+
+    def __construct_result(self, query_result):
+        query_printout = ''
+        for row in query_result:
+            query_printout += '\n' + '\t'.join(str(elem) for elem in row)
+        return query_printout
 
     def __repr__(self):
         return "MySQL Database: {}\nhost: {}\nuser: {}\npassword: *******\n" \
@@ -29,36 +64,17 @@ class MySQLDB:
         table_printout += '--\t{:40}\t-----'.format('-----')
         table_printout += '\nID\t{:40}\tSCORE\n'.format('TITLE')
         table_printout += '--\t{:40}\t-----'.format('-----')
-        whole_table = self.__do_query('SELECT * FROM {}'.format(table))
+        whole_table = self.__do_sqlstatement('SELECT * FROM {}'.format(table))
         for row in whole_table:
             table_printout += '\n{}\t{:40}\t{}'.format(row[0], row[1], row[2])
         return table_printout
 
-    def sqlquery(self, select='*', from_='', where='', order_by=''):
-        query = 'SELECT {} FROM {} '.format(select, from_)
-        if where != '':
-            query += 'WHERE {} '.format(where)
-        if order_by != '':
-            query += 'ORDER BY {} '.format(order_by)
-        return self.__construct_result(self.__do_query(query))
 
-    def __do_query(self, query):
-        self.cursor.execute(query)
-        return self.cursor.fetchall()
 
-    def __construct_result(self, query_result):
-        query_printout = ''
-        for row in query_result:
-            query_printout += '\n' + '\t'.join(str(elem) for elem in row)
-        return query_printout
 
-    def insert_evaluation(self, insert_into='', values=()):
-        # todo needs calling function to provide values as tuple (title, score)
-        # todo add if else to handle multiple rows inserts with .executemany()
-        statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
-        self.cursor.execute(statement)
-        self.connection.commit()
-        return None
+
+
+
 
 
 
@@ -69,16 +85,16 @@ db = MySQLDB(host='localhost', user='root', database='evaluations')
 # print('\nTest __str__', db)
 
 """ TEST .do_sqlquery() """
-# print(db.__do_query('SELECT * FROM boardgames_evaluations WHERE score > 8'))
+# print(db.__do_sqlstatement('SELECT * FROM boardgames_evaluations WHERE score > 8'))
 
-""" TEST .sqlquery() """
-# print('\nTest .sqlquery()', db.sqlquery('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
-# print(db.sqlquery('AVG(score)', 'boardgames_evaluations'))
-# print(db.sqlquery('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
+""" TEST .select() """
+# print('\nTest .select()', db.select('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
+# print(db.select('AVG(score)', 'boardgames_evaluations'))
+# print(db.select('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
 
 """ TEST .insert_evaluation() """
-# db.insert_evaluation('boardgames_evaluations', ('Eurobusiness', 2))
-# print(db.sqlquery(from_='boardgames_evaluations'))
+db.insert_evaluation('boardgames_evaluations', ('Eurobusiness', 3))
+print(db.select(from_='boardgames_evaluations', where='score > 2'))
 
 """ TEST cartesian JOIN """
-print(db.sqlquery(from_='movies_evaluations, tvseries_evaluations'))
+# print(db.select(from_='movies_evaluations, tvseries_evaluations'))
