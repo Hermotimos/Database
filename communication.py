@@ -65,48 +65,42 @@ def do_action():
         elif chosen_action == 3:
             print(db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, group_by='title'))
         elif chosen_action == 4:
-            title = ask_for_title()
-            print(db.select(select='title, score', from_=chosen_table, where='title = \'{}\''.format(title)))
+            print(db.select(select='title, score', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
         elif chosen_action == 5:
-            title = ask_for_title()
-            print(db.select(select='COUNT(title)', from_=chosen_table, where='title = \'{}\''.format(title)))
+            print(db.select(select='COUNT(title)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
         elif chosen_action == 6:
-            title = ask_for_title()
-            print(db.select(select='title, AVG(score)', from_=chosen_table, where='title = \'{}\''.format(title)))
+            print(db.select(select='title, AVG(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
         elif chosen_action == 7:
-            title = ask_for_title()
-            print(db.select(select='title, MAX(score)', from_=chosen_table, where='title = \'{}\''.format(title)))
+            print(db.select(select='title, MAX(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
         elif chosen_action == 8:
-            title = ask_for_title()
-            print(db.select(select='title, MIN(score)', from_=chosen_table, where='title = \'{}\''.format(title)))
+            print(db.select(select='title, MIN(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
         elif chosen_action == 9:
             evaluate(db, chosen_table)
-        # todo fix bug by adding new evaluation
 
 
-def evaluate(database, table=''):
-    new_tit = str(ask_for_title())
-    new_eval = int(ask_for_evaluation())
+def evaluate(database, table):
+    new_tit = str(ask_title())
+    new_eval = int(ask_evaluation())
     values = (new_tit, new_eval)
-    database.insert_evaluation(insert_into=''.format(table), values=values)
-    print("Your evaluation: '{}': {} \nYour evaluation is much appreciated.".format(new_tit, new_eval))
+    database.insert_evaluation(insert_into='{}'.format(table), values=values)
+    print("Evaluation: ['{}': {}] has been added.\nYour evaluation is much appreciated.".format(new_tit, new_eval))
 
 
-def ask_for_title():
+def ask_title():
     title = input("Enter title: ")
     try:
         assert len(title) > 0
         return title
     except AssertionError:
         print("You have not given any title. Try again :)\n")
-        return ask_for_title()
+        return ask_title()
 
 
-def ask_for_evaluation():
+def ask_evaluation():
     new_evaluation = input("Enter evaluation 1-10: ")
     try:
         assert 0 < int(new_evaluation) < 11
         return new_evaluation
     except Exception:
         print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(new_evaluation))
-        return ask_for_evaluation()
+        return ask_evaluation()
