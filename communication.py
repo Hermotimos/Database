@@ -1,4 +1,5 @@
 from db_class import MySQLDB
+import datetime
 
 
 def choose_table():
@@ -29,7 +30,7 @@ def choose_table():
 
 def choose_action():
     try:
-        options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         chosen_action = int(input("What would you like to do?\n"
                                   "{} - show all evaluations\n"
                                   "{} - show TOP 5 titles with best average evaluation scores\n"
@@ -39,9 +40,7 @@ def choose_action():
                                   "{} - show average evaluation score for a title\n"
                                   "{} - show highest evaluation score for a title\n"
                                   "{} - show lowest evaluation score for a title\n"
-                                  "{} - add new evaluation\n"
-                                  "{} - ***choose specific time period for one of the above***"
-                                  .format(*options)))
+                                  "{} - add new evaluation\n".format(*options)))
         assert 0 < chosen_action < options[-1] + 1
         return chosen_action
     except Exception:
@@ -51,43 +50,55 @@ def choose_action():
 
 def do_action():
     db = MySQLDB(host='localhost', user='root', database='evaluations')
-
     chosen_table = choose_table()
+
     if chosen_table == 'ALL':
         print(db)
     else:
         chosen_action = choose_action()
+        timelimit = ''
+        if chosen_action != 9:
+            timelimit = ask_timelimit()
+
         if chosen_action == 1:
-            print(db.select(from_=chosen_table))
+            result = db.select(from_=chosen_table, where=timelimit)
+            is_not_empty(result)
         elif chosen_action == 2:
-            res = db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, order_by='AVG(score) DESC', group_by='title', limit=5)
-            ispresent(res)
+            result = db.select(select='title, ROUND(AVG(score), 1)',
+                               from_=chosen_table, where=timelimit, order_by='AVG(score) DESC', group_by='title', limit=5)
+            is_not_empty(result)
         elif chosen_action == 3:
-            print(db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, group_by='title'))
+            print(db.select(select='title, ROUND(AVG(score), 1)',
+                            from_=chosen_table, where=timelimit, group_by='title'))
         elif chosen_action == 4:
-            res = db.select(select='title, score', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
-            ispresent(res)
+            result = db.select(select='title, score',
+                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+            is_not_empty(result)
         elif chosen_action == 5:
-            res = db.select(select='COUNT(title)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
-            ispresent(res)
+            result = db.select(select='COUNT(title)',
+                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+            is_not_empty(result)
         elif chosen_action == 6:
-            res = db.select(select='title, AVG(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
-            ispresent(res)
+            result = db.select(select='title, AVG(score)',
+                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+            is_not_empty(result)
         elif chosen_action == 7:
-            res = db.select(select='title, MAX(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
-            ispresent(res)
+            result = db.select(select='title, MAX(score)',
+                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+            is_not_empty(result)
         elif chosen_action == 8:
-            res = db.select(select='title, MIN(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
-            ispresent(res)
+            result = db.select(select='title, MIN(score)',
+                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+            is_not_empty(result)
         elif chosen_action == 9:
             evaluate(db, chosen_table)
 
 
-def ispresent(sql_result):
+def is_not_empty(sql_result):
     if len(sql_result) > 0:
         print(sql_result)
     else:
-        print("There aren't any evaluations for given title in the database.")
+        print("There aren't any evaluations in the database that satisfy given conditions.")
 
 
 def evaluate(database, table):
@@ -118,3 +129,43 @@ def ask_evaluation():
         return ask_evaluation()
 
 
+def ask_timelimit():
+    asklimit = input("Would you like to limit results to specific time period (y or n) ?\n")  # todo create yesorno()
+    if asklimit == 'y':
+        low = ask_date("Enter lower boundary of time period (format: yyyy-mm-dd) or press ENTER for no lower limit.\n")
+        upp = ask_date("Enter upper boundary of time period (format: yyyy-mm-dd) or press ENTER for no upper limit.\n")
+        if not low:
+            low = '1900-01-01'
+        if not upp:
+            upp = 'NOW()'
+        return "creation_time BETWEEN '{}' AND {} ".format(low, upp)
+    elif asklimit == 'n':
+        return "creation_time BETWEEN '1900-01-01' AND NOW() "
+    else:
+        print("Wrong value entered. Please choose again.\n")
+        return ask_timelimit()
+
+
+def ask_date(prompt):
+    date = input("{}\n".format(prompt))
+    if not date:
+        return date
+    else:
+        try:
+            datetime.datetime.strptime(date, '%Y-%m-%d')
+            return date
+        except ValueError:
+            print("Wrong value entered. Please choose again.\n")
+            return ask_date(prompt)
+
+
+def ask_yes_or_no(prompt):
+    answer = input(prompt)
+    if answer in ('y', 'n'):
+        return answer
+    else:
+        print("Wrong value entered. Please choose again.\n")
+        return ask_yes_or_no(prompt)
+
+#todo: apply ask_yes_or_no wherever it makes code shorter
+#todo: similar function with prompt and assertion to check ?
