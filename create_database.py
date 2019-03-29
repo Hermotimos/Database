@@ -18,38 +18,22 @@ mycursor = mydb.cursor()
 
 """CREATE TABLES"""
 
-mycursor.execute("DROP TABLE IF EXISTS movies_evaluations")
-mycursor.execute("DROP TABLE IF EXISTS tvseries_evaluations")
-mycursor.execute("DROP TABLE IF EXISTS pcgames_evaluations")
-mycursor.execute("DROP TABLE IF EXISTS boardgames_evaluations")
+tables_to_create = ['movies_evaluations', 'tvseries_evaluations', 'pcgames_evaluations', 'boardgames_evaluations']
 
-mycursor.execute("CREATE TABLE movies_evaluations "
-                 "("
-                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-                 "title VARCHAR(200) NOT NULL,"
-                 "score TINYINT(2) NOT NULL"
-                 ")")
-mycursor.execute("CREATE TABLE tvseries_evaluations "
-                 "("
-                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-                 "title VARCHAR(200) NOT NULL,"
-                 "score TINYINT(2) NOT NULL"
-                 ")")
-mycursor.execute("CREATE TABLE pcgames_evaluations "
-                 "("
-                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-                 "title VARCHAR(200) NOT NULL,"
-                 "score TINYINT(2) NOT NULL"
-                 ")")
-mycursor.execute("CREATE TABLE boardgames_evaluations "
-                 "("
-                 "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
-                 "title VARCHAR(200) NOT NULL,"
-                 "score TINYINT(2) NOT NULL"
-                 ")")
+for table in tables_to_create:
+    mycursor.execute("DROP TABLE IF EXISTS {}".format(table))
+
+for table in tables_to_create:
+    mycursor.execute("CREATE TABLE {} "
+                     "("
+                     "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
+                     "title VARCHAR(200) NOT NULL,"
+                     "score TINYINT(2) NOT NULL"
+                     ")".format(table))
+
 mycursor.execute("SHOW TABLES")
 for table in mycursor:
-    print(table[0])
+    print('table: ', table[0])
 
 
 """ POPULATE TABLES WITH RANDOM NUMBER OF EVALUATIONS HAVING RANDOM EVALUATION SCORE"""
