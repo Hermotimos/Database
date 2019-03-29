@@ -32,7 +32,7 @@ def choose_action():
         chosen_action = int(input("What would you like to do?\n"
                                   "1 - show all evaluations\n"
                                   "2 - show titles with best average evaluation scores\n"
-                                  "3 - show all titles with their average evaluation score\n"      # further options
+                                  "3 - show all titles with their average evaluation score\n"     
                                   "4 - show all evaluations for a title\n"
                                   "5 - show number of evaluations for a title\n"
                                   "6 - show average evaluation score for a title\n"
@@ -62,17 +62,29 @@ def do_action():
         elif chosen_action == 3:
             print(db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, group_by='title'))
         elif chosen_action == 4:
-            print(db.select(select='title, score', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
+            res = db.select(select='title, score', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
+            ispresent(res)
         elif chosen_action == 5:
-            print(db.select(select='COUNT(title)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
+            res = db.select(select='COUNT(title)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
+            ispresent(res)
         elif chosen_action == 6:
-            print(db.select(select='title, AVG(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
+            res = db.select(select='title, AVG(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
+            ispresent(res)
         elif chosen_action == 7:
-            print(db.select(select='title, MAX(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
+            res = db.select(select='title, MAX(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
+            ispresent(res)
         elif chosen_action == 8:
-            print(db.select(select='title, MIN(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title())))
+            res = db.select(select='title, MIN(score)', from_=chosen_table, where='title = \'{}\''.format(ask_title()))
+            ispresent(res)
         elif chosen_action == 9:
             evaluate(db, chosen_table)
+
+
+def ispresent(sql_result):
+    if len(sql_result) > 0:
+        print(sql_result)
+    else:
+        print("There aren't any evaluations for given title in the database.")
 
 
 def evaluate(database, table):
