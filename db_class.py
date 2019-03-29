@@ -42,12 +42,12 @@ class MySQLDB:
         query = 'SELECT {} FROM {} '.format(select, from_)
         if where:
             query += 'WHERE {} '.format(where)
+        if group_by:
+            query += 'GROUP BY {} '.format(group_by)
         if order_by:
             query += 'ORDER BY {} '.format(order_by)
-        if group_by:
-            query += 'GROUP BY {}'.format(group_by)
         if limit:
-            query += 'LIMIT {}'.format(limit)
+            query += 'LIMIT {} '.format(limit)
         return construct_result(self.__do_sqlstatement(query))
 
 
@@ -98,4 +98,4 @@ db = MySQLDB(host='localhost', user='root', database='evaluations')
 # print(db.select(from_='movies_evaluations, tvseries_evaluations'))
 
 """ TEST arg limit in .select()"""
-print(db.select(select='title, score', from_='tvseries_evaluations', limit=14))
+# print(db.select(select='title, score', from_='tvseries_evaluations', limit=14))
