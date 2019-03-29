@@ -29,17 +29,19 @@ def choose_table():
 
 def choose_action():
     try:
+        options = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         chosen_action = int(input("What would you like to do?\n"
-                                  "1 - show all evaluations\n"
-                                  "2 - show TOP 5 titles with best average evaluation scores\n"
-                                  "3 - show all titles with their average evaluation score\n"     
-                                  "4 - show all evaluations for a title\n"
-                                  "5 - show number of evaluations for a title\n"
-                                  "6 - show average evaluation score for a title\n"
-                                  "7 - show highest evaluation score for a title\n"
-                                  "8 - show lowest evaluation score for a title\n"
-                                  "9 - add new evaluation\n"))
-        options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                                  "{} - show all evaluations\n"
+                                  "{} - show TOP 5 titles with best average evaluation scores\n"
+                                  "{} - show all titles with their average evaluation score\n"     
+                                  "{} - show all evaluations for a title\n"
+                                  "{} - show number of evaluations for a title\n"
+                                  "{} - show average evaluation score for a title\n"
+                                  "{} - show highest evaluation score for a title\n"
+                                  "{} - show lowest evaluation score for a title\n"
+                                  "{} - add new evaluation\n"
+                                  "{} - ***choose specific time period for one of the above***"
+                                  .format(*options)))
         assert 0 < chosen_action < options[-1] + 1
         return chosen_action
     except Exception:
@@ -114,3 +116,5 @@ def ask_evaluation():
     except Exception:
         print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(new_evaluation))
         return ask_evaluation()
+
+
