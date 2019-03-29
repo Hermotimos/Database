@@ -31,7 +31,7 @@ class MySQLDB:
         statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
         return self.__do_sqlstatement(statement)
 
-    def select(self, select='*', from_='', where='', order_by='', group_by=''):
+    def select(self, select='*', from_='', where='', order_by='', group_by='', limit=0):
 
         def construct_result(query_result):
             query_printout = ''
@@ -46,8 +46,10 @@ class MySQLDB:
             query += 'ORDER BY {} '.format(order_by)
         if group_by:
             query += 'GROUP BY {}'.format(group_by)
+        if limit:
+            query += 'LIMIT {}'.format(limit)
         return construct_result(self.__do_sqlstatement(query))
-        # TODO error handling in final sqldb class (GROUP BY requires syntax in SELECT, research)
+
 
     def __repr__(self):
         return "MySQL Database: {}\nhost: {}\nuser: {}\npassword: *******\n" \
@@ -94,3 +96,6 @@ db = MySQLDB(host='localhost', user='root', database='evaluations')
 
 """ TEST cartesian JOIN """
 # print(db.select(from_='movies_evaluations, tvseries_evaluations'))
+
+""" TEST arg limit in .select()"""
+print(db.select(select='title, score', from_='tvseries_evaluations', limit=14))
