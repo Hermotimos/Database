@@ -31,7 +31,7 @@ def choose_action():
     try:
         chosen_action = int(input("What would you like to do?\n"
                                   "1 - show all evaluations\n"
-                                  "2 - show titles with best average evaluation scores\n"
+                                  "2 - show TOP 5 titles with best average evaluation scores\n"
                                   "3 - show all titles with their average evaluation score\n"     
                                   "4 - show all evaluations for a title\n"
                                   "5 - show number of evaluations for a title\n"
@@ -58,7 +58,8 @@ def do_action():
         if chosen_action == 1:
             print(db.select(from_=chosen_table))
         elif chosen_action == 2:
-            pass                    # todo further options (eval over n; titles with top n avg-evals etc)
+            res = db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, order_by='AVG(score) DESC', group_by='title', limit=5)
+            ispresent(res)
         elif chosen_action == 3:
             print(db.select(select='title, ROUND(AVG(score), 1)', from_=chosen_table, group_by='title'))
         elif chosen_action == 4:
