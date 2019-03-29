@@ -30,7 +30,8 @@ for table in tables_to_create:
                      "("
                      "evaluation_id INT AUTO_INCREMENT PRIMARY KEY,"
                      "title VARCHAR(200) NOT NULL,"
-                     "score TINYINT(2) NOT NULL"
+                     "score TINYINT(2) NOT NULL,"
+                     "creation_time DATETIME DEFAULT CURRENT_TIMESTAMP"
                      ")".format(table))
 
 mycursor.execute("SHOW TABLES")
