@@ -2,8 +2,6 @@ from db_class import MySQLDB
 
 
 def choose_table():
-    """returns str with table name or 'ALL' for printout of whole db"""
-
     try:
         data = int(input("Which evaluations would you like to browse?\n"
                          "1 - TV series\n"
@@ -30,7 +28,6 @@ def choose_table():
 
 
 def choose_action():
-    """ Returns int 1-8 """
     try:
         chosen_action = int(input("What would you like to do?\n"
                                   "1 - show all evaluations\n"
