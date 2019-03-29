@@ -1,5 +1,5 @@
 from db_class import MySQLDB
-import datetime
+from questions import ask_date, ask_evaluation, ask_title, ask_yes_or_no
 
 
 def choose_table():
@@ -49,6 +49,7 @@ def choose_action():
 
 
 def do_action():
+    # todo: awful function but how should it be changed? (for future development)
     db = MySQLDB(host='localhost', user='root', database='evaluations')
     chosen_table = choose_table()
 
@@ -63,33 +64,52 @@ def do_action():
         if chosen_action == 1:
             result = db.select(from_=chosen_table, where=timelimit)
             is_not_empty(result)
+
         elif chosen_action == 2:
             result = db.select(select='title, ROUND(AVG(score), 1)',
-                               from_=chosen_table, where=timelimit, order_by='AVG(score) DESC', group_by='title', limit=5)
+                               from_=chosen_table,
+                               where=timelimit,
+                               order_by='AVG(score) DESC',
+                               group_by='title',
+                               limit=5)
             is_not_empty(result)
+
         elif chosen_action == 3:
             print(db.select(select='title, ROUND(AVG(score), 1)',
-                            from_=chosen_table, where=timelimit, group_by='title'))
+                            from_=chosen_table,
+                            where=timelimit,
+                            group_by='title'))
+
         elif chosen_action == 4:
             result = db.select(select='title, score',
-                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               from_=chosen_table,
+                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
             is_not_empty(result)
+
         elif chosen_action == 5:
             result = db.select(select='COUNT(title)',
-                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               from_=chosen_table,
+                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
             is_not_empty(result)
+
         elif chosen_action == 6:
             result = db.select(select='title, AVG(score)',
-                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               from_=chosen_table,
+                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
             is_not_empty(result)
+
         elif chosen_action == 7:
             result = db.select(select='title, MAX(score)',
-                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               from_=chosen_table,
+                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
             is_not_empty(result)
+
         elif chosen_action == 8:
             result = db.select(select='title, MIN(score)',
-                               from_=chosen_table, where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               from_=chosen_table,
+                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
             is_not_empty(result)
+
         elif chosen_action == 9:
             evaluate(db, chosen_table)
 
@@ -109,28 +129,8 @@ def evaluate(database, table):
     print("Evaluation: ['{}': {}] has been added.\nYour evaluation is much appreciated.".format(new_tit, new_eval))
 
 
-def ask_title():
-    title = input("Enter title: ")
-    try:
-        assert len(title) > 0
-        return title
-    except AssertionError:
-        print("You have not given any title. Try again :)\n")
-        return ask_title()
-
-
-def ask_evaluation():
-    new_evaluation = input("Enter evaluation 1-10: ")
-    try:
-        assert 0 < int(new_evaluation) < 11
-        return new_evaluation
-    except Exception:
-        print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(new_evaluation))
-        return ask_evaluation()
-
-
 def ask_timelimit():
-    asklimit = input("Would you like to limit results to specific time period (y or n) ?\n")  # todo create yesorno()
+    asklimit = ask_yes_or_no("Would you like to limit results to specific time period (y or n) ?\n")
     if asklimit == 'y':
         low = ask_date("Enter lower boundary of time period (format: yyyy-mm-dd) or press ENTER for no lower limit.\n")
         upp = ask_date("Enter upper boundary of time period (format: yyyy-mm-dd) or press ENTER for no upper limit.\n")
@@ -141,31 +141,6 @@ def ask_timelimit():
         return "creation_time BETWEEN '{}' AND {} ".format(low, upp)
     elif asklimit == 'n':
         return "creation_time BETWEEN '1900-01-01' AND NOW() "
-    else:
-        print("Wrong value entered. Please choose again.\n")
-        return ask_timelimit()
 
 
-def ask_date(prompt):
-    date = input("{}\n".format(prompt))
-    if not date:
-        return date
-    else:
-        try:
-            datetime.datetime.strptime(date, '%Y-%m-%d')
-            return date
-        except ValueError:
-            print("Wrong value entered. Please choose again.\n")
-            return ask_date(prompt)
-
-
-def ask_yes_or_no(prompt):
-    answer = input(prompt)
-    if answer in ('y', 'n'):
-        return answer
-    else:
-        print("Wrong value entered. Please choose again.\n")
-        return ask_yes_or_no(prompt)
-
-#todo: apply ask_yes_or_no wherever it makes code shorter
-#todo: similar function with prompt and assertion to check ?
+# todo: similar function with prompt and assertion to check ?
