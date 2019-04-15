@@ -22,6 +22,7 @@ SQL
 Program created and run in IDE (PyCharm 2019.1.1 Community Edition) under Windows 7.
 
 ## Features
+* show whole database  
 * show TOP 5 titles with best average evaluation scores  
 * show all titles with their average evaluation score  
 * show all evaluations for a title  
@@ -31,9 +32,10 @@ Program created and run in IDE (PyCharm 2019.1.1 Community Edition) under Window
 * add new evaluation
 
 ## Status
-TODO: include XML and JSON data types in SQL schema  
+TODO: add option to query (not only print) all tables of the database together (JOIN).  
+TODO: include XML and JSON data types in SQL schema.  
 TODO: implement XPath and JSONPath expressions in SQL queries and inserts.  
-TODO: develop reusable MySQLDatabase class
+TODO: develop reusable MySQLDatabase class.  
 
 ## Content
 
