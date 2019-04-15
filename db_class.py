@@ -1,7 +1,6 @@
 import mysql.connector
 
 
-# TODO: create method askforpass to handle exceptions when wrong password, with recursion
 class MySQLDB:
     def __init__(self, host='', user='', password=input("Enter password for chosen database:\n"), database=''):
         self.host = host
@@ -77,25 +76,3 @@ class MySQLDB:
 
 
 db = MySQLDB(host='localhost', user='root', database='evaluations')
-
-
-""" TEST __str__ and within it also .construct_whole_table()"""
-# print(db)
-
-""" TEST .do_sqlquery() """
-# print(db._MySQLDB__do_sqlstatement('SELECT * FROM boardgames_evaluations WHERE score > 8'))
-
-""" TEST .select() """
-# print(db.select('title, score', 'tvseries_evaluations', 'score >+ 6', 'score DESC'))
-# print(db.select('AVG(score)', 'boardgames_evaluations'))
-# print(db.select('AVG(score)', 'boardgames_evaluations', 'score >= 8'))
-
-""" TEST .insert_evaluation() """
-# db.insert_evaluation('boardgames_evaluations', ('Eurobusiness', 3))
-# print(db.select(from_='boardgames_evaluations', where='score > 2'))
-
-""" TEST cartesian JOIN """
-# print(db.select(from_='movies_evaluations, tvseries_evaluations'))
-
-""" TEST arg limit in .select()"""
-# print(db.select(select='title, score', from_='tvseries_evaluations', limit=14))
