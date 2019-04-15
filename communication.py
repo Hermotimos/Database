@@ -1,5 +1,6 @@
 from db_class import MySQLDB
 from questions import ask_date, ask_evaluation, ask_title, ask_yes_or_no
+import time
 
 
 def choose_table():
@@ -10,16 +11,11 @@ def choose_table():
                          "3 - PC games\n"
                          "4 - boardgames\n"
                          "5 - print whole database\n"))
-        if data == 1:
-            table = 'tvseries_evaluations'
-        elif data == 2:
-            table = 'movies_evaluations'
-        elif data == 3:
-            table = 'pcgames_evaluations'
-        elif data == 4:
-            table = 'boardgames_evaluations'
-        elif data == 5:
-            table = 'ALL'
+        if   data == 1: table = 'tvseries_evaluations'
+        elif data == 2: table = 'movies_evaluations'
+        elif data == 3: table = 'pcgames_evaluations'
+        elif data == 4: table = 'boardgames_evaluations'
+        elif data == 5: table = 'ALL'
         else:
             raise ValueError
         return table
@@ -30,7 +26,7 @@ def choose_table():
 
 def choose_action():
     try:
-        options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        options = range(1, 10)
         chosen_action = input("What would you like to do?\n"
                               "{} - show all evaluations\n"
                               "{} - show TOP 5 titles with best average evaluation scores\n"
@@ -42,7 +38,7 @@ def choose_action():
                               "{} - show lowest evaluation score for a title\n"
                               "{} - add new evaluation\n".format(*options))
         assert 0 < int(chosen_action) < options[-1] + 1
-        return chosen_action
+        return int(chosen_action)
     except (AssertionError, ValueError):
         print("Wrong value entered. Please choose again.\n")
         return choose_action()
@@ -75,10 +71,11 @@ def do_action():
             is_not_empty(result)
 
         elif chosen_action == 3:
-            print(db.select(select='title, ROUND(AVG(score), 1)',
+            result = db.select(select='title, ROUND(AVG(score), 1)',
                             from_=chosen_table,
                             where=timelimit,
-                            group_by='title'))
+                            group_by='title')
+            is_not_empty(result)
 
         elif chosen_action == 4:
             result = db.select(select='title, score',
@@ -117,8 +114,10 @@ def do_action():
 def is_not_empty(sql_result):
     if len(sql_result) > 0:
         print(sql_result)
+        time.sleep(2)
     else:
         print("There aren't any evaluations in the database that satisfy given conditions.")
+        time.sleep(2)
 
 
 def evaluate(database, table):
