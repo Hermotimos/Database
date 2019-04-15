@@ -3,17 +3,15 @@ import datetime
 
 def ask_if_continue():
     answ = ask_yes_or_no("\nWould you like to continue (y/n) ?\n")
-    if answ == 'y':
-        return True
-    elif answ == 'n':
-        return False
+    return True if answ else False
 
 
 def ask_yes_or_no(prompt):
     answer = input(prompt)
-    if answer in ('y', 'n'):
-        return answer
-    else:
+    try:
+        assert answer in ('y', 'n')
+        return True if answer == 'y' else False
+    except AssertionError:
         print("Wrong value entered. Please choose again.\n")
         return ask_yes_or_no(prompt)
 
@@ -33,7 +31,7 @@ def ask_evaluation():
     try:
         assert 0 < int(new_evaluation) < 11
         return new_evaluation
-    except Exception:
+    except (AssertionError, ValueError):
         print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(new_evaluation))
         return ask_evaluation()
 

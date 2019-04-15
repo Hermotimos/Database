@@ -21,9 +21,9 @@ def choose_table():
         elif data == 5:
             table = 'ALL'
         else:
-            raise Exception
+            raise ValueError
         return table
-    except Exception:
+    except ValueError:
         print("Wrong value entered. Please choose again.\n")
         return choose_table()
 
@@ -31,7 +31,7 @@ def choose_table():
 def choose_action():
     try:
         options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        chosen_action = int(input("What would you like to do?\n"
+        chosen_action = input("What would you like to do?\n"
                                   "{} - show all evaluations\n"
                                   "{} - show TOP 5 titles with best average evaluation scores\n"
                                   "{} - show all titles with their average evaluation score\n"     
@@ -40,10 +40,10 @@ def choose_action():
                                   "{} - show average evaluation score for a title\n"
                                   "{} - show highest evaluation score for a title\n"
                                   "{} - show lowest evaluation score for a title\n"
-                                  "{} - add new evaluation\n".format(*options)))
-        assert 0 < chosen_action < options[-1] + 1
+                                  "{} - add new evaluation\n".format(*options))
+        assert 0 < int(chosen_action) < options[-1] + 1
         return chosen_action
-    except Exception:
+    except (AssertionError, ValueError):
         print("Wrong value entered. Please choose again.\n")
         return choose_action()
 
@@ -130,16 +130,16 @@ def evaluate(database, table):
 
 
 def ask_timelimit():
-    asklimit = ask_yes_or_no("Would you like to limit results to specific time period (y or n) ?\n")
-    if asklimit == 'y':
-        low = ask_date("Enter lower boundary of time period (format: yyyy-mm-dd) or press ENTER for no lower limit.\n")
-        upp = ask_date("Enter upper boundary of time period (format: yyyy-mm-dd) or press ENTER for no upper limit.\n")
+    limit = ask_yes_or_no("Would you like to limit results to specific time period (y or n) ?\n")
+    if limit:
+        low = ask_date("Specify lower boundary of time period (format: yyyy-mm-dd) or press ENTER for none.\n")
+        upp = ask_date("Specify upper boundary of time period (format: yyyy-mm-dd) or press ENTER for none.\n")
         if not low:
             low = '1900-01-01'
         if not upp:
             upp = 'NOW()'
         return "creation_time BETWEEN '{}' AND {} ".format(low, upp)
-    elif asklimit == 'n':
+    else:
         return "creation_time BETWEEN '1900-01-01' AND NOW() "
 
 
