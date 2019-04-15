@@ -5,7 +5,12 @@
         1. Creates database (drops one if exists).
         2. Creates tables (movies_evaluations, tvseries_evaluations, pcgames_evaluations, boardgames_evaluations).
         3. Populates tables with random number of random-score evaluations for given lists of titles.
+
+    TODO:
+        - implement XML and JSON data types
+        - implement XPath and JsonPath queries within SQL
 """
+
 import mysql.connector
 from random import random
 
@@ -141,9 +146,8 @@ all_insert_statements = [
                         insert_into_pcgames_evaluations,
                         insert_into_boardgames_evaluations
                         ]
-for n in range(4):
-    mycursor.executemany(all_insert_statements[n], all_evals[n])
+for elem in range(4):
+    mycursor.executemany(all_insert_statements[elem], all_evals[elem])
 
 
 mydb.commit()
-
