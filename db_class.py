@@ -1,6 +1,7 @@
 import mysql.connector
 
-# TODO: create funciton askforpass to handle exceptions when wrong password, with recursion
+
+# TODO: create method askforpass to handle exceptions when wrong password, with recursion
 class MySQLDB:
     def __init__(self, host='', user='', password=input("Enter password for chosen database:\n"), database=''):
         self.host = host
