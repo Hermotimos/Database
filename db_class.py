@@ -67,12 +67,12 @@ class MySQLDB:
 
     def __construct_whole_table(self, table):
         table_printout = '\n\n{}\n'.format(table).upper()
-        table_printout += '--\t{:40}\t-----'.format('-----')
-        table_printout += '\nID\t{:40}\tSCORE\n'.format('TITLE')
-        table_printout += '--\t{:40}\t-----'.format('-----')
+        table_printout += '----\t{:40}\t-----'.format('-----')
+        table_printout += '\n ID \t{:40}\tSCORE\n'.format('TITLE')
+        table_printout += '----\t{:40}\t-----'.format('-----')
         whole_table = self.__do_sqlstatement('SELECT * FROM {}'.format(table))
         for row in whole_table:
-            table_printout += '\n{}\t{:40}\t{}'.format(row[0], row[1], row[2])
+            table_printout += '\n{:4}\t{:40}\t{:-2}'.format(row[0], row[1], row[2])
         return table_printout
 
 
