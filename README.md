@@ -1,15 +1,15 @@
 # EvaluationsDB
 
 ## Table of contents
-*[General info](#general-info)
+* [General info](#general-info)
 
-*[Technologies](#technologies)
+* [Technologies](#technologies)
 
-*[Setup](#setup)
+* [Setup](#setup)
 
-*[Status](#status)
+* [Status](#status)
 
-*[Content](#content)
+* [Content](#content)
 
 
 
