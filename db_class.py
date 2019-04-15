@@ -18,21 +18,35 @@ import mysql.connector
 
 
 class MySQLDB:
-    def __init__(self, host='', user='', password=input("Enter password for chosen database:\n"), database=''):
+    def __init__(self, host, user, database, password=input("Enter password for chosen database:\n")):
         self.host = host
         self.user = user
         self.password = password
         self.database = database
 
     def __open(self):
+        """Create connection to database and create cursor object."""
         self.cnx = mysql.connector.connect(host=self.host, user=self.user, passwd=self.password, database=self.database)
         self.cursor = self.cnx.cursor()
 
     def __close(self):
+        """Close cursor, then close connection to the database."""
         self.cursor.close()
         self.cnx.close()
 
     def __do_sqlstatement(self, statement):
+        """
+        Perform SQL statement on the database and return result.
+
+        Parameters
+        ----------
+        statement (str): SQL statement in form of str constructed by insert_evaluation() or select() methods.
+
+        Returns
+        -------
+        tuple: One tuple per row returned by SQL statement.
+        TODO: give example of statement and return.
+        """
         self.__open()
         self.cursor.execute(statement)
         try:
@@ -44,6 +58,18 @@ class MySQLDB:
         return result
 
     def insert_evaluation(self, insert_into='', values=()):
+        """
+        TODO
+
+        Parameters
+        ----------
+        insert_into
+        values
+
+        Returns
+        -------
+
+        """
         statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
         return self.__do_sqlstatement(statement)
 
@@ -67,6 +93,7 @@ class MySQLDB:
         return construct_result(self.__do_sqlstatement(query))
 
     def __repr__(self):
+        """Return info about current connection to database and database structure (tables)."""
         return "MySQL Database: {}\nhost: {}\nuser: {}\npassword: *******\n" \
                "Tables: {}".format(self.database, self.host, self.user, self.list_tables)
 
