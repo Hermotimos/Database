@@ -1,3 +1,19 @@
+"""
+    This module defines MySQLDB class, which connect user to MySQL database created in db_setup.py.
+
+    MySQLDB class enables basic SELECT... FROM... and INSERT INTO... VALUES... statements
+    Following SQL clauses are supported in SELECT...FROM... statements:
+        - WHERE
+        - GROUP BY
+        - ORDER BY
+        - LIMIT
+
+    TODO:
+        - implement paging with LIMIT and OFFSET
+        - implement JOIN-s for querying all tables (requires new option in communication.py)
+"""
+
+
 import mysql.connector
 
 
@@ -73,6 +89,3 @@ class MySQLDB:
         for row in whole_table:
             table_printout += '\n{:4}\t{:40}\t{:-2}'.format(row[0], row[1], row[2])
         return table_printout
-
-
-db = MySQLDB(host='localhost', user='root', database='evaluations')
