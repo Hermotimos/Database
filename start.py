@@ -1,7 +1,6 @@
-from communication import do_action
-from questions import ask_if_continue
+from communication import do_action, continue_browsing
 
 while True:
     do_action()
-    if not ask_if_continue():
+    if not continue_browsing():
         break

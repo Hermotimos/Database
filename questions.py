@@ -1,9 +1,4 @@
-import datetime
-
-
-def ask_if_continue():
-    answ = ask_yes_or_no("\nWould you like to continue (y/n) ?\n")
-    return True if answ else False
+import time
 
 
 def ask_yes_or_no(prompt):
@@ -42,7 +37,7 @@ def ask_date(prompt_message):
         return date
     else:
         try:
-            datetime.datetime.strptime(date, '%Y-%m-%d')
+            time.strptime(date, '%Y-%m-%d')
             return date
         except ValueError:
             print("Wrong value entered. Please choose again.\n")

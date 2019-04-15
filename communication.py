@@ -1,6 +1,5 @@
 from db_class import MySQLDB
 from questions import ask_date, ask_evaluation, ask_title, ask_yes_or_no
-import time
 
 
 def choose_table():
@@ -114,10 +113,8 @@ def do_action():
 def is_not_empty(sql_result):
     if len(sql_result) > 0:
         print(sql_result)
-        time.sleep(2)
     else:
         print("There aren't any evaluations in the database that satisfy given conditions.")
-        time.sleep(2)
 
 
 def evaluate(database, table):
@@ -142,4 +139,6 @@ def ask_timelimit():
         return "creation_time BETWEEN '1900-01-01' AND NOW() "
 
 
-# todo: similar function with prompt and assertion to check ?
+def continue_browsing():
+    answ = ask_yes_or_no("\nWould you like to continue (y/n) ?\n")
+    return True if answ else False
