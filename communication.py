@@ -9,7 +9,7 @@ def choose_table():
                          "2 - movies\n"
                          "3 - PC games\n"
                          "4 - boardgames\n"
-                         "5 - all of the above\n"))
+                         "5 - print whole database\n"))
         if data == 1:
             table = 'tvseries_evaluations'
         elif data == 2:
