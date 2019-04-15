@@ -32,15 +32,15 @@ def choose_action():
     try:
         options = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         chosen_action = input("What would you like to do?\n"
-                                  "{} - show all evaluations\n"
-                                  "{} - show TOP 5 titles with best average evaluation scores\n"
-                                  "{} - show all titles with their average evaluation score\n"     
-                                  "{} - show all evaluations for a title\n"
-                                  "{} - show number of evaluations for a title\n"
-                                  "{} - show average evaluation score for a title\n"
-                                  "{} - show highest evaluation score for a title\n"
-                                  "{} - show lowest evaluation score for a title\n"
-                                  "{} - add new evaluation\n".format(*options))
+                              "{} - show all evaluations\n"
+                              "{} - show TOP 5 titles with best average evaluation scores\n"
+                              "{} - show all titles with their average evaluation score\n"     
+                              "{} - show all evaluations for a title\n"
+                              "{} - show number of evaluations for a title\n"
+                              "{} - show average evaluation score for a title\n"
+                              "{} - show highest evaluation score for a title\n"
+                              "{} - show lowest evaluation score for a title\n"
+                              "{} - add new evaluation\n".format(*options))
         assert 0 < int(chosen_action) < options[-1] + 1
         return chosen_action
     except (AssertionError, ValueError):
