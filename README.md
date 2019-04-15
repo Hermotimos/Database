@@ -18,16 +18,22 @@ SQL
 
 ## Setup
 
+## Features
+
+* show TOP 5 titles with best average evaluation scores  
+* show all titles with their average evaluation score  
+* show all evaluations for a title  
+* show number of evaluations for a title  
+* show average evaluation score for a title  
+* show highest evaluation score for a title  
+* show lowest evaluation score for a title  
+* add new evaluation
 ## Status
 
 ## Content
 
-###create_database
-
-###db_class
-
-###communications
-
-###questions
-
-###start
+### create_database  
+### db_class  
+### communications  
+### questions  
+### start
