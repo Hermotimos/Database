@@ -1,3 +1,11 @@
+"""
+    Create 'evaluations' database with random evaluations for predefined titles.
+
+    Steps:
+        1. Creates database (drops one if exists).
+        2. Creates tables (movies_evaluations, tvseries_evaluations, pcgames_evaluations, boardgames_evaluations).
+        3. Populates tables with random number of random-score evaluations for given lists of titles.
+"""
 import mysql.connector
 from random import random
 
@@ -18,7 +26,7 @@ mydb = mysql.connector.connect(host='localhost', user='root', passwd=password, d
 mycursor = mydb.cursor()
 
 
-# CREATE TABLES AFTER DROPPING THEM IF EXIST
+# CREATE TABLES
 
 tables_to_create = ['movies_evaluations', 'tvseries_evaluations', 'pcgames_evaluations', 'boardgames_evaluations']
 
@@ -42,7 +50,17 @@ for table in mycursor:
 # POPULATE TABLES WITH RANDOM NUMBER OF EVALUATIONS HAVING RANDOM EVALUATION SCORE
 
 def generate_evaluations(titles):
-    """ Returns list of 2-element tuples (title, evaluation) """
+    """
+    Returns list of erandom evaluations for titles provided as arg.
+
+    Parameters
+    ----------
+    titles (any iterable type): Iterable with titles.
+
+    Returns
+    -------
+    list: Returns list of 2-element tuples [(str, int), (str, int), ...] where int is a random number 1-10.
+    """
     random_evaluations = []
     for title in titles:
         n = 0
@@ -64,7 +82,7 @@ movies_titles = [
                   'Her',
                   'Moon',
                   'Dune'
-                ]
+                  ]
 tvseries_titles = [
                     'The Wire',
                     'The Shield',
@@ -90,14 +108,14 @@ pcgames_titles = [
                   'Fallout',
                   'Heroes of Might And Magic III',
                   'Quake III: Arena',
-                ]
+                  ]
 boardgames_titles = [
-                        'Battlestar Galactica',
-                        'Game of Thrones',
-                        'Carcassonne',
-                        'Dixit',
-                        'Magiczny Miecz',
-                        'The Settlers of Catan'
+                     'Battlestar Galactica',
+                     'Game of Thrones',
+                     'Carcassonne',
+                     'Dixit',
+                     'Magiczny Miecz',
+                     'The Settlers of Catan'
                     ]
 
 random_evals_movies = generate_evaluations(movies_titles)
@@ -105,19 +123,27 @@ random_evals_tvseries = generate_evaluations(tvseries_titles)
 random_evals_pcgames = generate_evaluations(pcgames_titles)
 random_evals_boardgames = generate_evaluations(boardgames_titles)
 
+
 insert_into_movies_evaluations = "INSERT INTO movies_evaluations (title, score) VALUES (%s, %s)"
 insert_into_tvseries_evaluations = "INSERT INTO tvseries_evaluations (title, score) VALUES (%s, %s)"
 insert_into_pcgames_evaluations = "INSERT INTO pcgames_evaluations (title, score) VALUES (%s, %s)"
 insert_into_boardgames_evaluations = "INSERT INTO boardgames_evaluations (title, score) VALUES (%s, %s)"
 
-mycursor.executemany(insert_into_movies_evaluations, random_evals_movies)
-mycursor.executemany(insert_into_tvseries_evaluations, random_evals_tvseries)
-mycursor.executemany(insert_into_pcgames_evaluations, random_evals_pcgames)
-mycursor.executemany(insert_into_boardgames_evaluations, random_evals_boardgames)
+all_evals = [
+            random_evals_movies,
+            random_evals_tvseries,
+            random_evals_pcgames,
+            random_evals_boardgames
+            ]
+all_insert_statements = [
+                        insert_into_movies_evaluations,
+                        insert_into_tvseries_evaluations,
+                        insert_into_pcgames_evaluations,
+                        insert_into_boardgames_evaluations
+                        ]
+for n in range(4):
+    mycursor.executemany(all_insert_statements[n], all_evals[n])
+
+
 mydb.commit()
 
-
-# TEST db:
-# from db_class import MySQLDB
-# db = MySQLDB(host='localhost', user='root', database='evaluations')
-# print(db)
