@@ -31,7 +31,7 @@ Program created and run in IDE (PyCharm 2019.1.1 Community Edition) under Window
 * add new evaluation
 
 ## Status
-TODO: include XML and JSON data types in SQL schema => implement XPath and JSONPath expression in SQL queries and inserts.
+TODO: include XML and JSON data types in SQL schema => implement XPath and JSONPath expression in SQL queries and inserts.  
 TODO: develop reusable MySQLDatabase class
 
 ## Content
