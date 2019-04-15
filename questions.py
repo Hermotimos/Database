@@ -1,6 +1,14 @@
 import datetime
 
 
+def ask_if_continue():
+    answ = ask_yes_or_no("\nWould you like to continue (y/n) ?\n")
+    if answ == 'y':
+        return True
+    elif answ == 'n':
+        return False
+
+
 def ask_yes_or_no(prompt):
     answer = input(prompt)
     if answer in ('y', 'n'):
