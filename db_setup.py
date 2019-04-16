@@ -54,8 +54,7 @@ for table in mycursor:
 # POPULATE TABLES WITH RANDOM NUMBER OF EVALUATIONS HAVING RANDOM EVALUATION SCORE
 
 def generate_evaluations(titles):
-    """
-    Returns list of erandom evaluations for titles provided as arg.
+    """Returns list of erandom evaluations for titles provided as arg.
 
     Parameters
     ----------
