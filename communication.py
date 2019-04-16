@@ -68,7 +68,12 @@ def choose_action():
 
 
 def do_action():
-    # todo: awful function but how should it be changed? (for future development)
+    """Instantiates MySQLDB class, performs SQL statements based on user's choices and prints results.
+
+    Returns
+    -------
+
+    """
     db = MySQLDB(host='localhost', user='root', database='evaluations')
     chosen_table = choose_table()
 
@@ -78,11 +83,11 @@ def do_action():
         chosen_action = choose_action()
         timelimit = ''
         if chosen_action != 9:
-            timelimit = ask_timelimit()
+            timelimit = ask_timelimit("Would you like to limit results to specific time period (y or n) ?\n")
 
         if chosen_action == 1:
             result = db.select(from_=chosen_table, where=timelimit)
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 2:
             result = db.select(select='title, ROUND(AVG(score), 1)',
@@ -91,50 +96,51 @@ def do_action():
                                order_by='AVG(score) DESC',
                                group_by='title',
                                limit=5)
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 3:
             result = db.select(select='title, ROUND(AVG(score), 1)',
                                from_=chosen_table,
                                where=timelimit,
                                group_by='title')
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 4:
             result = db.select(select='title, score',
                                from_=chosen_table,
                                where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 5:
             result = db.select(select='COUNT(title)',
                                from_=chosen_table,
                                where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 6:
             result = db.select(select='title, AVG(score)',
                                from_=chosen_table,
                                where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 7:
             result = db.select(select='title, MAX(score)',
                                from_=chosen_table,
                                where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 8:
             result = db.select(select='title, MIN(score)',
                                from_=chosen_table,
                                where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
-            is_not_empty(result)
+            print_if_not_empty(result)
 
         elif chosen_action == 9:
             evaluate(db, chosen_table)
 
 
-def is_not_empty(sql_result):
+def print_if_not_empty(sql_result):
+    """Check if SQL result is not empty, print it if not empty, print message about empty result if empty."""
     if len(sql_result) > 0:
         print(sql_result)
     else:
@@ -219,9 +225,25 @@ def ask_evaluation(prompt):
         return ask_evaluation(prompt)
 
 
-def ask_timelimit():
+def ask_timelimit(prompt):
+    """Ask user if they want to limit their search results by time. If yes, limit search by dates entered by user.
 
-    def ask_date(prompt):
+        Question will be asked recursively until user enters 'y' or 'n'.
+        If 'y' nested function ask_date() will be called to specify lower and upper time boundary.
+        If 'n' time boundaries will be set: lower to '1900-01-01', upper to now.
+
+        Parameters
+        ----------
+            prompt (str): Text of question printed to the user.
+
+        Returns
+        -------
+            str: Result is formatted to serve as condition for SQL WHERE clause.
+                Ex. "creation_time BETWEEN '1900-01-01' AND NOW() "
+                Ex. "creation_time BETWEEN '2019-01-01' AND '2019-04-30' "
+        """
+
+    def ask_date(prompt_date):
         """Ask user to enter date in format yyyy-mm-dd.
 
         Question will be asked recursively until user enters date in format yyyy-mm-dd.
@@ -235,7 +257,7 @@ def ask_timelimit():
             str: Date in yyyy-mm-dd format.
 
         """
-        date = input("{}\n".format(prompt))
+        date = input("{}\n".format(prompt_date))
         if not date:
             return ''
         else:
@@ -244,9 +266,9 @@ def ask_timelimit():
                 return date
             except ValueError:
                 print("Wrong value entered. Please choose again.\n")
-                return ask_date(prompt)
+                return ask_date(prompt_date)
 
-    limit = ask_yes_or_no("Would you like to limit results to specific time period (y or n) ?\n")
+    limit = ask_yes_or_no(prompt)
     if limit:
         low = ask_date("Specify lower boundary of time period (format: yyyy-mm-dd) or press ENTER for none.\n")
         upp = ask_date("Specify upper boundary of time period (format: yyyy-mm-dd) or press ENTER for none.\n")
@@ -259,6 +281,7 @@ def ask_timelimit():
         return "creation_time BETWEEN '1900-01-01' AND NOW() "
 
 
-def ask_continue():
-    answ = ask_yes_or_no("\nWould you like to continue (y/n) ?\n")
+def ask_continue(prompt):
+    """Ask user if they want to continue, return True if 'y', False otherwise."""
+    answ = ask_yes_or_no(prompt)
     return True if answ else False
