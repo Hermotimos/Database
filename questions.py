@@ -1,7 +1,14 @@
 """
+    Defines input functions for interaction with user.
 
+    All functions in this module are exported to communication.py.
+    All functions in this module call themselves recursively in case user enters value from outside choice options.
+
+    ask_yes_or_no: Asks user for answer 'y' or 'n'.
+    ask_title: Asks user to enter title (cannot be empty string).
+    ask_evaluation: Asks user to evaluate title 1-10.
+    ask_date: Asks user to enter date in yyyy-mm-dd format.
 """
-
 import time
 
 
