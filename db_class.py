@@ -13,7 +13,6 @@
         - implement JOIN-s for querying all tables (requires new option in communication.py)
 """
 
-
 import mysql.connector
 
 
@@ -55,33 +54,40 @@ class MySQLDB:
 
         Parameters
         ----------
-        select :
-        from_
-        where
-        order_by
-        group_by
-        limit
+            select: Names of queried columns; default '*' stands for ALL.
+            from_: Name of queried table.
+            where: Conditions limiting query result.
+            order_by: Key for ordering query result.
+            group_by: Key for grouping rows ins query result.
+            limit: Key for limiting query result to first n rows only; default 0 stands for no limit.
 
         Returns
         -------
-        str: Formatted query result - line per row of query result.
-
+            str: Formatted query result - line per row of query result.
+                 Final result is formatted by nested function format_result().
         """
 
         def format_result(query_result):
-            """
+            """Unpack list of tuples with SQL query result and format it as multi-line str.
+
+            Unpacks each tuple representing one row of query result and converts its elements to str.
+            From each unpacked row/tuple, a new str line is constructed and added to multi-line str to be returned.
 
             Parameters
             ----------
-            query_result
-
+                query_result (list of tuples): SQL query result.
+                                               [(int, str, int, datetime.datetime(int, int, int, int, int, int)), ...]
             Returns
             -------
+                str:  One- to n-lines long str.
+
             Examples
             --------
                 [(1, 'Blade Runner', 6, datetime.datetime(2019, 3, 30, 16, 14, 27)),
                 (2, 'Blade Runner', 5, datetime.datetime(2019, 3, 30, 16, 14, 27))]
-
+                =>
+                '1   Blade Runner                      6 	2019-03-30 16:14:27'
+                '2   Blade Runner                      5 	2019-03-30 16:14:27'
             """
             query_printout = ''
             for row in query_result:
@@ -142,24 +148,71 @@ class MySQLDB:
     def __repr__(self):
         """Return info about current connection to database and database structure (tables)."""
         return "MySQL Database: {}\nhost: {}\nuser: {}\npassword: *******\n" \
-               "Tables: {}".format(self.database, self.host, self.user, self.list_tables)
+               "Tables: {}".format(self.database, self.host, self.user, self.tables_list)
 
     def __str__(self):
+        """For each table in database format it as str and add to multi-line str for possible printout of __str__.
+
+        Returns
+        -------
+            str: Multi-line str containing all tables in database
+
+        Examples
+        --------
+                TVSERIES_EVALUATIONS
+                ----	-----                                   	-----
+                 ID 	TITLE                                   	SCORE
+                ----	-----                                   	-----
+                   1	The Wire                                	 9
+                   2	The Wire                                	 5
+                   ...  ...                                          ...
+
+                BOARDGAMES_EVALUATIONS
+                ----	-----                                   	-----
+                 ID 	TITLE                                   	SCORE
+                ----	-----                                   	-----
+                   1	Battlestar Galactica                    	 9
+                   2	Battlestar Galactica                    	 4
+                   ...  ...                                          ...
+
+        """
         db_printout = ''
         self.__open()
         self.cursor.execute("SHOW TABLES")
-        self.list_tables = [t[0] for t in self.cursor]
-        for table in self.list_tables:
-            db_printout += self.__construct_whole_table(table)
+        self.tables_list = [t[0] for t in self.cursor]
+        for table in self.tables_list:
+            db_printout += self.__format_whole_table(table)
         self.__close()
         return db_printout
 
-    def __construct_whole_table(self, table):
-        table_printout = '\n\n{}\n'.format(table).upper()
+    def __format_whole_table(self, table_name):
+        """Format and return whole SQL table as str for __str__ method.
+
+        Parameters
+        ----------
+        table_name (str): Name of table in database.
+
+        Returns
+        -------
+            str: Multi-line str with table header, columns headers and lines representing rows of SQL table.
+
+        Examples
+        -------
+            __format_whole_table(tvseries_evaluations)
+
+                TVSERIES_EVALUATIONS
+                ----	-----                                   	-----
+                 ID 	TITLE                                   	SCORE
+                ----	-----                                   	-----
+                   1	The Wire                                	 9
+                   2	The Wire                                	 5
+                   ...  ...                                          ...
+        """
+        table_printout = '\n\n{}\n'.format(table_name).upper()
         table_printout += '----\t{:40}\t-----'.format('-----')
         table_printout += '\n ID \t{:40}\tSCORE\n'.format('TITLE')
         table_printout += '----\t{:40}\t-----'.format('-----')
-        whole_table = self.__do_sqlstatement('SELECT * FROM {}'.format(table))
+        whole_table = self.__do_sqlstatement('SELECT * FROM {}'.format(table_name))
         for row in whole_table:
             table_printout += '\n{:4}\t{:40}\t{:-2}'.format(row[0], row[1], row[2])
         return table_printout
