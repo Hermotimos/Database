@@ -10,7 +10,6 @@
         - implement XML and JSON data types
         - implement XPath and JsonPath queries within SQL
 """
-
 import mysql.connector
 from random import random
 
@@ -60,11 +59,11 @@ def generate_evaluations(titles):
 
     Parameters
     ----------
-    titles (any iterable type): Iterable with titles.
+        titles (any iterable type): Iterable with titles.
 
     Returns
     -------
-    list: Returns list of 2-element tuples [(str, int), (str, int), ...] where int is a random number 1-10.
+        list: Returns list of 2-element tuples [(str, int), (str, int), ...] where int is a random number 1-10.
     """
     random_evaluations = []
     for title in titles:
