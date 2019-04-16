@@ -19,7 +19,7 @@ def ask_yes_or_no(prompt):
 
     Parameters
     ----------
-    prompt (str): Text of question printed to the user.
+        prompt (str): Text of question printed to the user.
 
     Returns
     -------
@@ -39,6 +39,10 @@ def ask_title(prompt):
 
     Question will be asked recursively until user's input is at least one digit long.
 
+    Parameters
+    ----------
+        prompt (str): Text of question printed to the user.
+
     Returns
     -------
         str: Title entered by user.
@@ -56,6 +60,10 @@ def ask_evaluation(prompt):
     """Ask user to enter evaluation 1-10.
 
     Question will be asked recursively until user's input is a number from 1 to 10.
+
+    Parameters
+    ----------
+        prompt (str): Text of question printed to the user.
 
     Returns
     -------
@@ -77,11 +85,11 @@ def ask_date(prompt):
 
     Parameters
     ----------
-    prompt (str): The exact question about date asked to user.
+        prompt (str): The exact question about date asked to user.
 
     Returns
     -------
-
+        str: Date in yyyy-mm-dd format.
 
     """
     date = input("{}\n".format(prompt))
