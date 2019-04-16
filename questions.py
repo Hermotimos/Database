@@ -13,6 +13,18 @@ import time
 
 
 def ask_yes_or_no(prompt):
+    """Ask user question in 'prompt' and return True or False depending on answer.
+
+    Question will be asked recursively until user's input is 'y' or 'n'.
+
+    Parameters
+    ----------
+    prompt (str): Text of question printed to the user.
+
+    Returns
+    -------
+        bool: True or False depending on user answer ('y' or 'n').
+    """
     answer = input(prompt)
     try:
         assert answer in ('y', 'n')
@@ -23,6 +35,14 @@ def ask_yes_or_no(prompt):
 
 
 def ask_title():
+    """Ask user to enter title.
+
+    Question will be asked recursively until user's input is at least one digit long.
+
+    Returns
+    -------
+        str: Title entered by user.
+    """
     title = input("Enter title: ")
     try:
         assert len(title) > 0
@@ -33,7 +53,15 @@ def ask_title():
 
 
 def ask_evaluation():
-    new_evaluation = input("Enter evaluation 1-10: ")
+    """Ask user to enter evaluation 1-10.
+
+    Question will be asked recursively until user's input is a number from 1 to 10.
+
+    Returns
+    -------
+        int: User's evaluation, number from 1 to 10.
+    """
+    new_evaluation = input("Enter evaluation from 1 to 10: ")
     try:
         assert 0 < int(new_evaluation) < 11
         return int(new_evaluation)
@@ -43,6 +71,16 @@ def ask_evaluation():
 
 
 def ask_date(prompt_message):
+    """
+
+    Parameters
+    ----------
+    prompt_message
+
+    Returns
+    -------
+
+    """
     date = input("{}\n".format(prompt_message))
     if not date:
         return ''
