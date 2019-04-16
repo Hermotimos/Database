@@ -1,5 +1,5 @@
 """
-    This module defines MySQLDB class, which connect user to MySQL database created in db_setup.py.
+    This module defines MySQLDB class, which connects user to MySQL database created in db_setup.py.
 
     MySQLDB class enables basic SELECT... FROM... and INSERT INTO... VALUES... statements
     Following SQL clauses are supported in SELECT...FROM... statements:
@@ -86,8 +86,8 @@ class MySQLDB:
                 [(1, 'Blade Runner', 6, datetime.datetime(2019, 3, 30, 16, 14, 27)),
                 (2, 'Blade Runner', 5, datetime.datetime(2019, 3, 30, 16, 14, 27))]
                 =>
-                '1   Blade Runner                      6 	2019-03-30 16:14:27'
-                '2   Blade Runner                      5 	2019-03-30 16:14:27'
+                '1   Blade Runner   6 	2019-03-30 16:14:27'
+                '2   Blade Runner   5 	2019-03-30 16:14:27'
             """
             query_printout = ''
             for row in query_result:
