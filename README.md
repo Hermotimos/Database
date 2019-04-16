@@ -31,12 +31,6 @@ Program created and run in IDE (PyCharm 2019.1.1 Community Edition) under Window
 * show highest/lowest evaluation score for a title  
 * add new evaluation
 
-## Status
-TODO: add option to query (not only print) all tables of the database together (JOIN).  
-TODO: include XML and JSON data types in SQL schema.  
-TODO: implement XPath and JSONPath expressions in SQL queries and inserts.  
-TODO: develop reusable MySQLDatabase class.  
-
 ## Content
 
 ### create_database.py
@@ -47,6 +41,12 @@ Defines connection to MySQL database as class. Creates methods to query MySQL da
 Functions using methods of MySQL database class to query it and insert new evaluations according to user's input.
 ### start.py
 Main module. 
+
+## Status
+TODO: add option to query (not only print) all tables of the database together (JOIN).  
+TODO: include XML and JSON data types in SQL schema.  
+TODO: implement XPath and JSONPath expressions in SQL queries and inserts.  
+TODO: develop reusable MySQLDatabase class.  
 
 ## Sources and inspirations
 * https://www.flynerd.pl/2017/05/python-4-typy-i-zmienne.html  
