@@ -118,8 +118,8 @@ def is_not_empty(sql_result):
 
 
 def evaluate(database, table):
-    new_tit = str(ask_title())
-    new_eval = int(ask_evaluation())
+    new_tit = ask_title()
+    new_eval = ask_evaluation()
     values = (new_tit, new_eval)
     database.insert_evaluation(insert_into='{}'.format(table), values=values)
     print("Evaluation: ['{}': {}] has been added.\nYour evaluation is much appreciated.".format(new_tit, new_eval))

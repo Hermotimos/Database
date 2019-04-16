@@ -36,7 +36,7 @@ def ask_evaluation():
     new_evaluation = input("Enter evaluation 1-10: ")
     try:
         assert 0 < int(new_evaluation) < 11
-        return new_evaluation
+        return int(new_evaluation)
     except (AssertionError, ValueError):
         print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(new_evaluation))
         return ask_evaluation()
