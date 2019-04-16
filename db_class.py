@@ -91,8 +91,7 @@ class MySQLDB:
             """
             query_printout = ''
             for row in query_result:
-                id_, title, score, date = (str(field) for field in row)
-                query_printout += '\n' + '{:4}{:30}{:-2}\t{}'.format(id_, title, score, date)
+                query_printout += '\n' + '\t'.join(str(field) for field in row)
             return query_printout
 
         query = 'SELECT {} FROM {} '.format(select, from_)
@@ -216,3 +215,33 @@ class MySQLDB:
         for row in whole_table:
             table_printout += '\n{:4}\t{:40}\t{:-2}'.format(row[0], row[1], row[2])
         return table_printout
+
+
+# db = MySQLDB(host='localhost', user='root', database='evaluations')
+# print(db.do_sqlstatement('SELECT * FROM movies_evaluations'))
+
+
+
+result_table = [(1, 'Blade Runner', 6, (2019, 3, 30, 16, 14, 27)),
+                (2, 'Blade Rudddddddddnner', 5, (2019, 3, 30, 16, 14, 27)),
+                (3, 'Blade Runner', 5, (2019, 3, 30, 16, 14, 27))]
+
+columns_count = len(result_table[0])
+columns_widths = {}
+
+for col in range(columns_count):
+    columns_widths[col] = max(len(str(row[col])) for row in result_table)
+print(columns_widths)
+
+widths_list = [w for w in columns_widths.values()]
+print(widths_list)
+printout = ''
+
+# for row in result_table:
+#     printout += '\n{0:{1}}'.format((field for field in row), (width for width in widths_list))
+
+for row in result_table:
+    print(row)
+    printout += '\n' + '\t'.join(str(field) for field in row)
+
+print(printout)
