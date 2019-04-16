@@ -1,3 +1,7 @@
+"""
+
+"""
+
 import time
 
 
@@ -34,7 +38,7 @@ def ask_evaluation():
 def ask_date(prompt_message):
     date = input("{}\n".format(prompt_message))
     if not date:
-        return date
+        return ''
     else:
         try:
             time.strptime(date, '%Y-%m-%d')
