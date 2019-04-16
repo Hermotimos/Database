@@ -134,7 +134,7 @@ def ask_timelimit():
             low = '1900-01-01'
         if not upp:
             upp = 'NOW()'
-        return "creation_time BETWEEN '{}' AND {} ".format(low, upp)
+        return "creation_time BETWEEN '{}' AND '{}' ".format(low, upp)
     else:
         return "creation_time BETWEEN '1900-01-01' AND NOW() "
 
