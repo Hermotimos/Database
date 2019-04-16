@@ -27,6 +27,14 @@ from db_class import MySQLDB
 
 
 def choose_table():
+    """Asks user to chose table to browse.
+
+    Question will be asked recursively until user enters value within possible scope.
+
+    Returns
+    -------
+        str: Name of singe table chosen by user or 'ALL' for whole database.
+    """
     try:
         data = int(input("Which evaluations would you like to browse?\n"
                          "1 - TV series\n"
@@ -48,6 +56,14 @@ def choose_table():
 
 
 def choose_action():
+    """Asks user to chose action to perform.
+
+    Question will be asked recursively until user enters value within possible scope.
+
+    Returns
+    -------
+        int: Number representing chosen action.
+    """
     try:
         options = range(1, 10)
         chosen_action = input("What would you like to do?\n"
@@ -70,10 +86,16 @@ def choose_action():
 def do_action():
     """Instantiates MySQLDB class, performs SQL statements based on user's choices and prints results.
 
-    Returns
-    -------
+    Steps:
+        1. Instantiates MySQLDB class as db.
+        2. Calls choose_table() to determine user's choice of table in db. If user choses 'ALL' prints whole db.
+        3. Calls choose_action() to determine user's choice of action.
+        4. Based on chosen action constructs SQL statement, performs it and prints result if any.
 
+    Todo:
+        Try to break this function into smaller ones.
     """
+
     db = MySQLDB(host='localhost', user='root', database='evaluations')
     chosen_table = choose_table()
 
@@ -148,6 +170,13 @@ def print_if_not_empty(sql_result):
 
 
 def evaluate(database, table):
+    """Ask user for title and score and insert as new evaluation to database.
+
+    Parameters
+    ----------
+        database (db_class.MySQLDB): instance of MySQLDB class created in do_action().
+        table (str): Name of table chosen in do_action().
+    """
     new_tit = ask_title("Enter title: ")
     new_eval = ask_evaluation("Enter evaluation from 1 to 10: ")
     values = (new_tit, new_eval)
