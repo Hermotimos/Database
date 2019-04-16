@@ -1,7 +1,6 @@
 """
-This is the main module of the program.
+    This is the main module of the program.
 """
-
 from communication import do_action, ask_continue
 
 
