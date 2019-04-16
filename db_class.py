@@ -222,26 +222,26 @@ class MySQLDB:
 
 
 
-result_table = [(1, 'Blade Runner', 6, (2019, 3, 30, 16, 14, 27)),
-                (2, 'Blade Rudddddddddnner', 5, (2019, 3, 30, 16, 14, 27)),
-                (3, 'Blade Runner', 5, (2019, 3, 30, 16, 14, 27))]
-
-columns_count = len(result_table[0])
-columns_widths = {}
-
-for col in range(columns_count):
-    columns_widths[col] = max(len(str(row[col])) for row in result_table)
-print(columns_widths)
-
-widths_list = [w for w in columns_widths.values()]
-print(widths_list)
-printout = ''
-
+# result_table = [(1, 'Blade Runner', 6, (2019, 3, 30, 16, 14, 27)),
+#                 (2, 'Blade Rudddddddddnner', 5, (2019, 3, 30, 16, 14, 27)),
+#                 (3, 'Blade Runner', 5, (2019, 3, 30, 16, 14, 27))]
+#
+# columns_count = len(result_table[0])
+# columns_widths = {}
+#
+# for col in range(columns_count):
+#     columns_widths[col] = max(len(str(row[col])) for row in result_table)
+# print(columns_widths)
+#
+# widths_list = [w for w in columns_widths.values()]
+# print(widths_list)
+# printout = ''
+#
+# # for row in result_table:
+# #     printout += '\n{0:{1}}'.format((field for field in row), (width for width in widths_list))
+#
 # for row in result_table:
-#     printout += '\n{0:{1}}'.format((field for field in row), (width for width in widths_list))
-
-for row in result_table:
-    print(row)
-    printout += '\n' + '\t'.join(str(field) for field in row)
-
-print(printout)
+#     print(row)
+#     printout += '\n' + '\t'.join(str(field) for field in row)
+#
+# print(printout)
