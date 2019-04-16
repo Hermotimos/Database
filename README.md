@@ -12,7 +12,7 @@
 
 ## General info
 This project was created for learning and exercise purposes.  
-This program enables user to connect to 'evaluations' database in order to query the database and insert new evaluations.
+This program enables user to connect to 'evaluations' database in order to browse the database and insert new evaluations.
 
 ## Technologies
 Python 3.7  
@@ -39,11 +39,14 @@ TODO: develop reusable MySQLDatabase class.
 
 ## Content
 
-### create_database  
-### db_class  
-### communications  
-### questions  
-### start
+### create_database.py
+Standalone program for creating database, tables and populating tables with random evaluations for a bunch of titles.
+### db_class.py
+Defines connection to MySQL database as class. Creates methods to query MySQL database.
+### communications.py
+Functions using methods of MySQL database class to query it and insert new evaluations according to user's input.
+### start.py
+Main module. 
 
 ## Sources and inspirations
 * https://www.flynerd.pl/2017/05/python-4-typy-i-zmienne.html  
