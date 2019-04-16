@@ -34,51 +34,59 @@ class MySQLDB:
         self.cursor.close()
         self.cnx.close()
 
-    def __do_sqlstatement(self, statement):
-        """
-        Perform SQL statement on the database and return result.
-
-        Parameters
-        ----------
-        statement (str): SQL statement in form of str constructed by insert_evaluation() or select() methods.
-
-        Returns
-        -------
-        tuple: One tuple per row returned by SQL statement.
-        TODO: give example of statement and return.
-        """
-        self.__open()
-        self.cursor.execute(statement)
-        try:
-            result = self.cursor.fetchall()
-        except mysql.connector.errors.InterfaceError:   # if not select-statement, than .fetchall() throws this error
-            result = None
-        self.cnx.commit()                               # just does nothing by select-statement
-        self.__close()
-        return result
-
     def insert_evaluation(self, insert_into='', values=()):
-        """
-        TODO
+        """Construct SQL DML statement as str, call __do_sqlstatement() to perform on database, return query result.
 
         Parameters
         ----------
-        insert_into
-        values
+            insert_into (str): Name of a table in the database.
+            values (tuple): The method defines target columns for INSERT statement as (title, score).
+                            The number and the order of values has to match target columns' order and number.
 
         Returns
         -------
-
+            str: Result of __do_sqlstatement(), ex.: 1 row(s) inserted.
         """
         statement = 'INSERT INTO {} (title, score) VALUES {}'.format(insert_into, values)
         return self.__do_sqlstatement(statement)
 
     def select(self, select='*', from_='', where='', order_by='', group_by='', limit=0):
+        """Construct SQL DQL statement as str, perform query on database, return formatted query result.
 
-        def construct_result(query_result):
+        Parameters
+        ----------
+        select :
+        from_
+        where
+        order_by
+        group_by
+        limit
+
+        Returns
+        -------
+        str: Formatted query result - line per row of query result.
+
+        """
+
+        def format_result(query_result):
+            """
+
+            Parameters
+            ----------
+            query_result
+
+            Returns
+            -------
+            Examples
+            --------
+                [(1, 'Blade Runner', 6, datetime.datetime(2019, 3, 30, 16, 14, 27)),
+                (2, 'Blade Runner', 5, datetime.datetime(2019, 3, 30, 16, 14, 27))]
+
+            """
             query_printout = ''
             for row in query_result:
-                query_printout += '\n' + '\t'.join(str(elem) for elem in row)
+                id_, title, score, date = (str(field) for field in row)
+                query_printout += '\n' + '{:4}{:30}{:-2}\t{}'.format(id_, title, score, date)
             return query_printout
 
         query = 'SELECT {} FROM {} '.format(select, from_)
@@ -90,7 +98,46 @@ class MySQLDB:
             query += 'ORDER BY {} '.format(order_by)
         if limit:
             query += 'LIMIT {} '.format(limit)
-        return construct_result(self.__do_sqlstatement(query))
+        return format_result(self.__do_sqlstatement(query))
+
+    def __do_sqlstatement(self, statement):
+        """Perform SQL statement on the database and return result.
+
+        This method serves for SELECT...FROM... and INSERT...INTO... statements.
+        If statement is INSERT INTO..., than self.cursor.fetchall() raises 'mysql.connector.errors.InterfaceError',
+        therefore try-except block.
+        If statement is INSERT INTO..., than self.cnx.commit() has no effect.
+
+        Parameters
+        ----------
+            statement (str): SQL statement in form of str constructed by insert_evaluation() or select() methods.
+
+        Returns
+        -------
+            tuple or str:
+                For SQL DQL statement (SELECT... FROM...) returns one tuple per row of query result.
+                For SQL DML statement (INSERT INTO... VALUES...) returns str with count of rows inserted.
+
+        Examples
+        --------
+            __do_sqlstatement('SELECT * FROM movies_evaluations LIMIT 3')
+            [(1, 'Blade Runner', 6, datetime.datetime(2019, 3, 30, 16, 14, 27)),
+            (2, 'Blade Runner', 5, datetime.datetime(2019, 3, 30, 16, 14, 27)),
+            (3, 'Blade Runner', 5, datetime.datetime(2019, 3, 30, 16, 14, 27))]
+
+            __do_sqlstatement('INSERT INTO movies_evaluations (title, score) VALUES ('Twin Peaks', 10)')
+            1 row(s) inserted.
+        """
+        self.__open()
+        self.cursor.execute(statement)
+        try:
+            result = self.cursor.fetchall()
+        except mysql.connector.errors.InterfaceError:
+            result = None
+            print(f'\n{self.cursor.rowcount} row(s) inserted.')
+        self.cnx.commit()
+        self.__close()
+        return result
 
     def __repr__(self):
         """Return info about current connection to database and database structure (tables)."""
