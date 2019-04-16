@@ -1,6 +1,11 @@
-from communication import do_action, continue_browsing
+from communication import do_action, ask_continue
 
-while True:
-    do_action()
-    if not continue_browsing():
-        break
+
+def main():
+    while True:
+        do_action()
+        if not ask_continue():
+            break
+
+
+main()
