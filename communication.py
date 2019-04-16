@@ -18,69 +18,11 @@
 
     ask_continue(): Exported to start.py. Enables user to continue current session ad infinitum.
 """
-
 import time
 from db_class import MySQLDB
 
 
 # >>>>>>>>>>>>>>>>>>>>>>>>> SECTION I: action-functions <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-
-def choose_table():
-    """Asks user to chose table to browse.
-
-    Question will be asked recursively until user enters value within possible scope.
-
-    Returns
-    -------
-        str: Name of singe table chosen by user or 'ALL' for whole database.
-    """
-    try:
-        data = int(input("Which evaluations would you like to browse?\n"
-                         "1 - TV series\n"
-                         "2 - movies\n"
-                         "3 - PC games\n"
-                         "4 - boardgames\n"
-                         "5 - print whole database\n"))
-        if   data == 1: table = 'tvseries_evaluations'
-        elif data == 2: table = 'movies_evaluations'
-        elif data == 3: table = 'pcgames_evaluations'
-        elif data == 4: table = 'boardgames_evaluations'
-        elif data == 5: table = 'ALL'
-        else:
-            raise ValueError
-        return table
-    except ValueError:
-        print("Wrong value entered. Please choose again.\n")
-        return choose_table()
-
-
-def choose_action():
-    """Asks user to chose action to perform.
-
-    Question will be asked recursively until user enters value within possible scope.
-
-    Returns
-    -------
-        int: Number representing chosen action.
-    """
-    try:
-        options = range(1, 10)
-        chosen_action = input("What would you like to do?\n"
-                              "{} - show all evaluations\n"
-                              "{} - show TOP 5 titles with best average evaluation scores\n"
-                              "{} - show all titles with their average evaluation score\n"     
-                              "{} - show all evaluations for a title\n"
-                              "{} - show number of evaluations for a title\n"
-                              "{} - show average evaluation score for a title\n"
-                              "{} - show highest evaluation score for a title\n"
-                              "{} - show lowest evaluation score for a title\n"
-                              "{} - add new evaluation\n".format(*options))
-        assert 0 < int(chosen_action) < options[-1] + 1
-        return int(chosen_action)
-    except (AssertionError, ValueError):
-        print("Wrong value entered. Please choose again.\n")
-        return choose_action()
 
 
 def do_action():
@@ -161,6 +103,63 @@ def do_action():
             evaluate(db, chosen_table)
 
 
+def choose_table():
+    """Asks user to chose table to browse.
+
+    Question will be asked recursively until user enters value within possible scope.
+
+    Returns
+    -------
+        str: Name of singe table chosen by user or 'ALL' for whole database.
+    """
+    try:
+        data = int(input("Which evaluations would you like to browse?\n"
+                         "1 - TV series\n"
+                         "2 - movies\n"
+                         "3 - PC games\n"
+                         "4 - boardgames\n"
+                         "5 - print whole database\n"))
+        if   data == 1: table = 'tvseries_evaluations'
+        elif data == 2: table = 'movies_evaluations'
+        elif data == 3: table = 'pcgames_evaluations'
+        elif data == 4: table = 'boardgames_evaluations'
+        elif data == 5: table = 'ALL'
+        else:
+            raise ValueError
+        return table
+    except ValueError:
+        print("Wrong value entered. Please choose again.\n")
+        return choose_table()
+
+
+def choose_action():
+    """Asks user to chose action to perform.
+
+    Question will be asked recursively until user enters value within possible scope.
+
+    Returns
+    -------
+        int: Number representing chosen action.
+    """
+    try:
+        options = range(1, 10)
+        chosen_action = input("What would you like to do?\n"
+                              "{} - show all evaluations\n"
+                              "{} - show TOP 5 titles with best average evaluation scores\n"
+                              "{} - show all titles with their average evaluation score\n"     
+                              "{} - show all evaluations for a title\n"
+                              "{} - show number of evaluations for a title\n"
+                              "{} - show average evaluation score for a title\n"
+                              "{} - show highest evaluation score for a title\n"
+                              "{} - show lowest evaluation score for a title\n"
+                              "{} - add new evaluation\n".format(*options))
+        assert 0 < int(chosen_action) < options[-1] + 1
+        return int(chosen_action)
+    except (AssertionError, ValueError):
+        print("Wrong value entered. Please choose again.\n")
+        return choose_action()
+
+
 def print_if_not_empty(sql_result):
     """Check if SQL result is not empty, print it if not empty, print message about empty result if empty."""
     if len(sql_result) > 0:
@@ -185,6 +184,12 @@ def evaluate(database, table):
 
 
 # >>>>>>>>>>>>>>>>>>>>>>>>> SECTION II: question-functions <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+def ask_continue(prompt):
+    """Ask user if they want to continue, return True if 'y', False otherwise."""
+    answ = ask_yes_or_no(prompt)
+    return True if answ else False
 
 
 def ask_yes_or_no(prompt):
@@ -308,9 +313,3 @@ def ask_timelimit(prompt):
         return "creation_time BETWEEN '{}' AND '{}' ".format(low, upp)
     else:
         return "creation_time BETWEEN '1900-01-01' AND NOW() "
-
-
-def ask_continue(prompt):
-    """Ask user if they want to continue, return True if 'y', False otherwise."""
-    answ = ask_yes_or_no(prompt)
-    return True if answ else False
