@@ -1,5 +1,29 @@
+"""
+    This module serves interaction between user and database.
+
+    SECTION I: action-functions
+    ------------------------
+    Defines functions that present user with action options and perform chosen actions on database.
+    Eables user to choose between databases for TV series, movies, PC games and boardgames, as well as
+    what action to perform (ex. show data bout specific title, show TOP 5, leave new evaluation).
+
+    do_action(): Main function is this section, exported to start.py.
+               Uses MySQLDB class methods to query and update database.
+
+
+    SECTION II: input-functions
+    ------------------------
+    Defines input functions for interaction with user.
+    All functions in this section call themselves recursively in case user enters value from outside choice options.
+
+    ask_continue(): Exported to start.py. Enables user to continue current session ad infinitum.
+"""
+
+import time
 from db_class import MySQLDB
-from questions import ask_date, ask_evaluation, ask_title, ask_yes_or_no
+
+
+# >>>>>>>>>>>>>>>>>>>>>>>>> SECTION I: action-functions <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 def choose_table():
@@ -71,9 +95,9 @@ def do_action():
 
         elif chosen_action == 3:
             result = db.select(select='title, ROUND(AVG(score), 1)',
-                            from_=chosen_table,
-                            where=timelimit,
-                            group_by='title')
+                               from_=chosen_table,
+                               where=timelimit,
+                               group_by='title')
             is_not_empty(result)
 
         elif chosen_action == 4:
@@ -125,7 +149,103 @@ def evaluate(database, table):
     print("Evaluation: ['{}': {}] has been added.\nYour evaluation is much appreciated.".format(new_tit, new_eval))
 
 
+# >>>>>>>>>>>>>>>>>>>>>>>>> SECTION II: question-functions <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+def ask_yes_or_no(prompt):
+    """Ask user question in 'prompt' and return True or False depending on answer.
+
+    Question will be asked recursively until user's input is 'y' or 'n'.
+
+    Parameters
+    ----------
+        prompt (str): Text of question printed to the user.
+
+    Returns
+    -------
+        bool: True or False depending on user answer ('y' or 'n').
+    """
+    answer = input(prompt)
+    try:
+        assert answer in ('y', 'n')
+        return True if answer == 'y' else False
+    except AssertionError:
+        print("Wrong value entered. Please choose again.\n")
+        return ask_yes_or_no(prompt)
+
+
+def ask_title(prompt):
+    """Ask user to enter title.
+
+    Question will be asked recursively until user's input is at least one digit long.
+
+    Parameters
+    ----------
+        prompt (str): Text of question printed to the user.
+
+    Returns
+    -------
+        str: Title entered by user.
+    """
+    title = input(prompt)
+    try:
+        assert len(title) > 0
+        return title
+    except AssertionError:
+        print("You have not given any title. Try again :)\n")
+        return ask_title(prompt)
+
+
+def ask_evaluation(prompt):
+    """Ask user to enter evaluation 1-10.
+
+    Question will be asked recursively until user's input is a number from 1 to 10.
+
+    Parameters
+    ----------
+        prompt (str): Text of question printed to the user.
+
+    Returns
+    -------
+        int: User's evaluation, number from 1 to 10.
+    """
+    new_evaluation = input(prompt)
+    try:
+        assert 0 < int(new_evaluation) < 11
+        return int(new_evaluation)
+    except (AssertionError, ValueError):
+        print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(
+            new_evaluation))
+        return ask_evaluation(prompt)
+
+
 def ask_timelimit():
+
+    def ask_date(prompt):
+        """Ask user to enter date in format yyyy-mm-dd.
+
+        Question will be asked recursively until user enters date in format yyyy-mm-dd.
+
+        Parameters
+        ----------
+            prompt (str): The exact question about date asked to user.
+
+        Returns
+        -------
+            str: Date in yyyy-mm-dd format.
+
+        """
+        date = input("{}\n".format(prompt))
+        if not date:
+            return ''
+        else:
+            try:
+                time.strptime(date, '%Y-%m-%d')
+                return date
+            except ValueError:
+                print("Wrong value entered. Please choose again.\n")
+                return ask_date(prompt)
+
     limit = ask_yes_or_no("Would you like to limit results to specific time period (y or n) ?\n")
     if limit:
         low = ask_date("Specify lower boundary of time period (format: yyyy-mm-dd) or press ENTER for none.\n")
@@ -139,7 +259,6 @@ def ask_timelimit():
         return "creation_time BETWEEN '1900-01-01' AND NOW() "
 
 
-def continue_browsing():
+def ask_continue():
     answ = ask_yes_or_no("\nWould you like to continue (y/n) ?\n")
     return True if answ else False
-
