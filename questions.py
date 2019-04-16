@@ -34,7 +34,7 @@ def ask_yes_or_no(prompt):
         return ask_yes_or_no(prompt)
 
 
-def ask_title():
+def ask_title(prompt):
     """Ask user to enter title.
 
     Question will be asked recursively until user's input is at least one digit long.
@@ -43,16 +43,16 @@ def ask_title():
     -------
         str: Title entered by user.
     """
-    title = input("Enter title: ")
+    title = input(prompt)
     try:
         assert len(title) > 0
         return title
     except AssertionError:
         print("You have not given any title. Try again :)\n")
-        return ask_title()
+        return ask_title(prompt)
 
 
-def ask_evaluation():
+def ask_evaluation(prompt):
     """Ask user to enter evaluation 1-10.
 
     Question will be asked recursively until user's input is a number from 1 to 10.
@@ -61,27 +61,30 @@ def ask_evaluation():
     -------
         int: User's evaluation, number from 1 to 10.
     """
-    new_evaluation = input("Enter evaluation from 1 to 10: ")
+    new_evaluation = input(prompt)
     try:
         assert 0 < int(new_evaluation) < 11
         return int(new_evaluation)
     except (AssertionError, ValueError):
         print("Your note ({}) outside the scope of possible evaluations (1-10).\nTry again :)\n".format(new_evaluation))
-        return ask_evaluation()
+        return ask_evaluation(prompt)
 
 
-def ask_date(prompt_message):
-    """
+def ask_date(prompt):
+    """Ask user to enter date in format yyyy-mm-dd.
+
+    Question will be asked recursively until user enters date in format yyyy-mm-dd.
 
     Parameters
     ----------
-    prompt_message
+    prompt (str): The exact question about date asked to user.
 
     Returns
     -------
 
+
     """
-    date = input("{}\n".format(prompt_message))
+    date = input("{}\n".format(prompt))
     if not date:
         return ''
     else:
@@ -90,7 +93,4 @@ def ask_date(prompt_message):
             return date
         except ValueError:
             print("Wrong value entered. Please choose again.\n")
-            return ask_date(prompt_message)
-
-
-
+            return ask_date(prompt)

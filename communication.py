@@ -79,31 +79,31 @@ def do_action():
         elif chosen_action == 4:
             result = db.select(select='title, score',
                                from_=chosen_table,
-                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
             is_not_empty(result)
 
         elif chosen_action == 5:
             result = db.select(select='COUNT(title)',
                                from_=chosen_table,
-                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
             is_not_empty(result)
 
         elif chosen_action == 6:
             result = db.select(select='title, AVG(score)',
                                from_=chosen_table,
-                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
             is_not_empty(result)
 
         elif chosen_action == 7:
             result = db.select(select='title, MAX(score)',
                                from_=chosen_table,
-                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
             is_not_empty(result)
 
         elif chosen_action == 8:
             result = db.select(select='title, MIN(score)',
                                from_=chosen_table,
-                               where='title = \'{}\' AND {}'.format(ask_title(), timelimit))
+                               where='title = \'{}\' AND {}'.format(ask_title("Enter title: "), timelimit))
             is_not_empty(result)
 
         elif chosen_action == 9:
@@ -118,8 +118,8 @@ def is_not_empty(sql_result):
 
 
 def evaluate(database, table):
-    new_tit = ask_title()
-    new_eval = ask_evaluation()
+    new_tit = ask_title("Enter title: ")
+    new_eval = ask_evaluation("Enter evaluation from 1 to 10: ")
     values = (new_tit, new_eval)
     database.insert_evaluation(insert_into='{}'.format(table), values=values)
     print("Evaluation: ['{}': {}] has been added.\nYour evaluation is much appreciated.".format(new_tit, new_eval))
@@ -142,3 +142,4 @@ def ask_timelimit():
 def continue_browsing():
     answ = ask_yes_or_no("\nWould you like to continue (y/n) ?\n")
     return True if answ else False
+
