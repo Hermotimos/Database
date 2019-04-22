@@ -289,7 +289,6 @@ def ask_timelimit(prompt):
         Returns
         -------
             str: Date in yyyy-mm-dd format.
-
         """
         date = input("{}\n".format(prompt_date))
         if not date:
