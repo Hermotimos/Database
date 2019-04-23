@@ -4,9 +4,9 @@
 * [General info](#general-info)  
 * [Technologies](#technologies)  
 * [Setup](#setup)  
-* [Status](#status)  
 * [Features](#features)
 * [Content](#content)  
+* [Status](#status) 
 * [Sources and inspirations](#sources-and-inspirations)
 
 
