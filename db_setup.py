@@ -4,7 +4,7 @@
     Steps:
         1. Creates database (drops one if exists).
         2. Creates tables (movies_evaluations, tvseries_evaluations, pcgames_evaluations, boardgames_evaluations).
-        3. Populates tables with random number of random-score evaluations for given lists of titles.
+        3. Populates tables with random number of random-score evaluations for predefined lists of titles.
 
     TODO:
         - implement XML and JSON data types
